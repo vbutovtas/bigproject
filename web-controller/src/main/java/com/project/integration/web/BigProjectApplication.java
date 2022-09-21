@@ -1,4 +1,4 @@
-package com.project.integration.bigproject;
+package com.project.integration.web;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -9,5 +9,4 @@ public class BigProjectApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(BigProjectApplication.class, args);
 	}
-
 }

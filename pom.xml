@@ -7,15 +7,44 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>bigproject</name>
 	<packaging>pom</packaging>
+
 	<properties>
 		<project.version>0.0.1-SNAPSHOT</project.version>
 		<spring.version>2.7.3</spring.version>
 		<maven.compiler.source>1.8</maven.compiler.source>
 		<maven.compiler.target>1.8</maven.compiler.target>
 	</properties>
+
 	<modules>
 		<module>web-service</module>
 		<module>web-controller</module>
 		<module>web-repository</module>
 	</modules>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.24</version>
+			<optional>true</optional>
+		</dependency>
+	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+				<configuration>
+					<excludes>
+						<exclude>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+						</exclude>
+					</excludes>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
 </project>
