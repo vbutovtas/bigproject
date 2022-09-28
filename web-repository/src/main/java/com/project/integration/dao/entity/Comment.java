@@ -1,47 +1,34 @@
 package com.project.integration.dao.entity;
 
-import java.util.HashSet;
-import java.util.Set;
-import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 
-@Entity(name = "users")
+@Entity(name = "comments")
 @Data
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class User {
+public class Comment {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   Integer id;
 
+  @NonNull String comment;
+
   @ManyToOne
-  @JoinColumn(name = "role_id")
-  Role role;
-
-  @NonNull String login;
-  @NonNull String password;
-  @NonNull String name;
-  @NonNull String surname;
-  @NonNull String email;
-  @NonNull String phone;
-  @NonNull String status;
-
-  @OneToOne(mappedBy = "user")
+  @JoinColumn(name = "user_id", insertable = false, updatable = false)
   Employee employee;
 
-  @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
-  Set<Order> orders = new HashSet<>();
-
+  @ManyToOne
+  @JoinColumn(name = "id", insertable = false, updatable = false)
+  Ticket ticket;
 }

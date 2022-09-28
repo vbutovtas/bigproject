@@ -1,4 +1,4 @@
-package com.project.integration.dao.enums;
+package com.project.integration.serv.enums;
 
 import java.util.stream.Stream;
 

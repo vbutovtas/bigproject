@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-@ComponentScan("com.project.integration.dao")
+@ComponentScan("com.project.integration")
 public interface RoleRepository extends JpaRepository<Role, Integer> {
   Optional<Role> findByName(String name);
 }

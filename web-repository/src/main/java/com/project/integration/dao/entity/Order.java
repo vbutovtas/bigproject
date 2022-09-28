@@ -1,47 +1,40 @@
 package com.project.integration.dao.entity;
 
-import java.util.HashSet;
-import java.util.Set;
-import javax.persistence.CascadeType;
+import java.math.BigDecimal;
+import java.sql.Blob;
+import java.time.LocalDate;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
 
-@Entity(name = "users")
+@Entity(name = "orders")
 @Data
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class User {
+public class Order {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   Integer id;
 
   @ManyToOne
-  @JoinColumn(name = "role_id")
-  Role role;
+  @JoinColumn(name = "client_id")
+  User client;
 
-  @NonNull String login;
-  @NonNull String password;
   @NonNull String name;
-  @NonNull String surname;
-  @NonNull String email;
-  @NonNull String phone;
-  @NonNull String status;
 
-  @OneToOne(mappedBy = "user")
-  Employee employee;
+  @NonNull Blob description;
 
-  @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
-  Set<Order> orders = new HashSet<>();
+  @Column(name = "start_date")
+  LocalDate startDate;
 
+  BigDecimal cost;
 }
