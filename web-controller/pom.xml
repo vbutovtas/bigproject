@@ -40,6 +40,12 @@
             <version>5.7.3</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.project.integration</groupId>
+            <artifactId>web-service</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
 </project>
