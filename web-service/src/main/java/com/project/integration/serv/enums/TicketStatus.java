@@ -3,7 +3,11 @@ package com.project.integration.serv.enums;
 import java.util.stream.Stream;
 
 public enum TicketStatus {
-  ACTIVE("ACTIVE"); //TODO ticket status
+  OPEN("OPEN"),
+  IN_DESIGN("IN_DESIGN"),
+  IN_BUILD("IN_BUILD"),
+  READY_FOR_TEST("READY_FOR_TEST"),
+  CLOSE("CLOSE");
 
   private final String value;
 

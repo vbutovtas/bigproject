@@ -3,7 +3,8 @@ package com.project.integration.serv.enums;
 import java.util.stream.Stream;
 
 public enum TicketType {
-  ACTIVE("ACTIVE"); //TODO ticket types
+  PROJECT("PROJECT"),
+  TASK("TASK");
 
   private final String value;
 

@@ -18,7 +18,7 @@ public class EmployeeDto {
   LocalDate birthDate;
   String position;
   String technologies;
-  Integer experience;
+  Float experience;
   Blob photo;
   Set<TicketDto> assigneeTickets = new HashSet<>();
   Set<TicketDto> reporterTickets = new HashSet<>();

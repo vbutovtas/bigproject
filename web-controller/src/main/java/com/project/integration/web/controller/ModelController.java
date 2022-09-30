@@ -21,6 +21,6 @@ public class ModelController {
   @GetMapping("/check")
   @ResponseBody
   public boolean check(){
-    return roleService.find("q");
+    return roleService.findByName("q");
   }
 }

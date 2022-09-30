@@ -42,7 +42,7 @@ public class Employee implements Serializable {
 
   @NonNull
   @Column(name = "work_experience")
-  Integer experience;
+  Float experience;
 
   Blob photo;
 
