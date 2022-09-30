@@ -10,7 +10,7 @@
 
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
           rel="stylesheet">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
     <script src="https://cdn.linearicons.com/free/1.0.0/svgembedder.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
     <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css'>
@@ -113,7 +113,7 @@
                         <path d="M20,11V13H8L13.5,18.5L12.08,19.92L4.16,12L12.08,4.08L13.5,5.5L8,11H20Z"></path>
                     </svg>
                </span>
-                <span id="moveRight" class="carousel__arrow">
+                    <span id="moveRight" class="carousel__arrow">
                       <svg class="carousel__icon" width="24" height="24" viewBox="0 0 24 24">
                          <path d="M4,11V13H16L10.5,18.5L11.92,19.92L19.84,12L11.92,4.08L10.5,5.5L16,11H4Z"></path>
                      </svg>
@@ -197,34 +197,40 @@
     </div>
 </section>
 <div class="modal fade" id="submitModal" tabindex="-1" role="dialog" aria-labelledby="submitModalLabel"
-     aria-hidden="true">
+     aria-hidden="true" style="@{exist_error!=null} ? 'style=\'display: block; padding-right: 14px;\'' : '' ">
     <div class="modal_popup">
         <div class="form">
-            <form>
-                <label for="first_name" required="required">First Name</label>
-                <input id="first_name" type="text"/>
-                <label for="last_name" required="required">Last Name</label>
-                <input id="last_name" type="text"/>
+            <form th:action="@{/create_request}" th:object="${orderForm}" method="post" enctype="multipart/form-data">
+                <div th:if="${exist_error!=null}" class="alert alert-danger">
+                    [[${exist_error}]]
+                </div>
+                <label for="first_name">First Name</label>
+                <input th:field="*{firstName}" id="first_name" type="text" required/>
+                <label for="last_name" >Last Name</label>
+                <input th:field="*{lastName}" id="last_name" type="text" required/>
                 <label for="phone" required="required">Phone</label>
-                <input type="tel" id="phone" name="phone"
+                <input th:field="*{phone}" type="tel" id="phone" name="phone"
                        pattern="+{0-9}{12}"
                        required>
-                <label for="email" required="required">Email Address</label>
-                <input id="email" type="email"/>
+                <label for="email">Email Address</label>
+                <input th:field="*{email}" id="email" type="email" required/>
                 <div class="custom-file">
                     <label class="custom-file-label" for="file">Select file:</label>
-                    <input class="custom-file-input" type="file" id="file" name="file" />
+                    <input class="custom-file-input" th:field="*{document}" type="file" id="file" name="file"/>
                 </div>
                 <div class="col-xs-12">
-                    <button class="tutorials-link" type="button">Submit</button>
+                    <button class="tutorials-link" type="submit">Submit</button>
                 </div>
             </form>
         </div>
         <div class="invite">
-            <h3 class="white-center-text"> <highlight>IT Manager Projects</highlight> can help you reimagine your business through a digital
+            <h3 class="white-center-text">
+                <highlight>IT Manager Projects</highlight>
+                can help you reimagine your business through a digital
                 lens. Our software engineering heritage combined with our strategic business and innovation consulting,
                 design thinking, and physical-digital capabilities provide real business value to our customers through
-                human-centric innovation.</h3>
+                human-centric innovation.
+            </h3>
             <button class="close" title="close" data-dismiss="modal"></button>
         </div>
     </div>
@@ -232,12 +238,16 @@
 <footer>
     <div class="container">
         <div class="row">
-            <div class="col-xs-12">
-                <h4>
-                    This is a footer
-                </h4>
+            <div class="col-md-12 item text">
+                <h3>IT Manager Projects</h3>
+                <p>Praesent sed lobortis mi. Suspendisse vel placerat ligula. Vivamus ac sem lacus. Ut vehicula rhoncus
+                    elementum. Etiam quis tristique lectus. Aliquam in arcu eget velit pulvinar dictum vel in justo.</p>
             </div>
+            <div class="col item social"><a href="#"><i class="icon ion-social-facebook"></i></a><a href="#"><i
+                    class="icon ion-social-twitter"></i></a><a href="#"><i class="icon ion-social-snapchat"></i></a><a
+                    href="#"><i class="icon ion-social-instagram"></i></a></div>
         </div>
+        <p class="copyright">IT Manager Projects © 2022</p>
     </div>
 </footer>
 </body>

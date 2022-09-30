@@ -44,4 +44,10 @@ public class User {
   @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
   Set<Order> orders = new HashSet<>();
 
+  public User(@NonNull String name, @NonNull String surname, @NonNull String email, @NonNull String phone) {
+    this.name = name;
+    this.surname = surname;
+    this.email = email;
+    this.phone = phone;
+  }
 }

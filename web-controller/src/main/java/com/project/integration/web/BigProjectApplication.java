@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication(scanBasePackages = "com.project.integration")
 public class BigProjectApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(BigProjectApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(BigProjectApplication.class, args);
+    }
 }

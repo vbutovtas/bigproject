@@ -37,4 +37,9 @@ public class Order {
   LocalDate startDate;
 
   BigDecimal cost;
+
+  public Order(User client, @NonNull Blob description) {
+    this.client = client;
+    this.description = description;
+  }
 }

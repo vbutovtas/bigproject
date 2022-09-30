@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @ComponentScan("com.project.integration.serv")
 public class RoleService {
@@ -18,7 +20,7 @@ public class RoleService {
   }
 
   public boolean findByName(String name) { //TODO redo
-    Optional<Role> role = roleRepository.findByName(name);
+    Optional<Role> role = roleRepository.findById(1);
     if (role.isPresent()) return true;
     else return false;
   }
