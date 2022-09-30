@@ -28,11 +28,11 @@ public class Ticket {
   Integer id;
 
   @ManyToOne
-  @JoinColumn(name = "user_id", insertable = false, updatable = false)
+  @JoinColumn(name = "assignee_id")
   Employee assignee;
 
   @ManyToOne
-  @JoinColumn(name = "user_id", insertable = false, updatable = false)
+  @JoinColumn(name = "reporter_id")
   Employee reporter;
 
   @ManyToOne
@@ -47,7 +47,10 @@ public class Ticket {
   LocalDate dueDate;
 
   @Column(name = "estimated_time")
-  int estimatedTime;
+  Float estimatedTime;
+
+  @Column(name = "logged_time")
+  Float loggedTime;
 
   @NonNull String status;
 
