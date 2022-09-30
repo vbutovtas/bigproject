@@ -56,6 +56,8 @@ public class Ticket {
 
   @NonNull String type;
 
+  @NonNull String severity;
+
   @NonNull String gitRef;
 
   @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL)

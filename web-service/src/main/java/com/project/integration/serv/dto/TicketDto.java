@@ -1,5 +1,6 @@
 package com.project.integration.serv.dto;
 
+import com.project.integration.serv.enums.TicketSeverity;
 import com.project.integration.serv.enums.TicketStatus;
 import com.project.integration.serv.enums.TicketType;
 import java.time.LocalDate;
@@ -25,6 +26,7 @@ public class TicketDto {
   Float loggedTime;
   TicketStatus status;
   TicketType type;
+  TicketSeverity severity;
   String gitRef;
   Set<CommentDto> comments = new HashSet<>();
 }
