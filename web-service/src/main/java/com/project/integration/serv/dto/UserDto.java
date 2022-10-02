@@ -1,8 +1,7 @@
 package com.project.integration.serv.dto;
 
+import com.project.integration.serv.enums.UserRoles;
 import com.project.integration.serv.enums.UserStatus;
-import java.util.HashSet;
-import java.util.Set;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +12,7 @@ import lombok.experimental.FieldDefaults;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserDto {
   Integer id;
-  RoleDto role;
+  UserRoles role;
   String login;
   String password;
   String name;
@@ -22,5 +21,4 @@ public class UserDto {
   String phone;
   UserStatus status;
   EmployeeDto employee;
-  Set<OrderDto> orders = new HashSet<>();
 }

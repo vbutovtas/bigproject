@@ -12,20 +12,25 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import lombok.AccessLevel;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
 @Entity(name = "users")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
+@RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class User {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   Integer id;
 
+  @NonNull
   @ManyToOne
   @JoinColumn(name = "role_id")
   Role role;
@@ -44,7 +49,8 @@ public class User {
   @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
   Set<Order> orders = new HashSet<>();
 
-  public User(@NonNull String name, @NonNull String surname, @NonNull String email, @NonNull String phone) {
+  public User(
+      @NonNull String name, @NonNull String surname, @NonNull String email, @NonNull String phone) {
     this.name = name;
     this.surname = surname;
     this.email = email;

@@ -7,7 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
 
 @Service
-@ComponentScan("com.project.integration")
+@ComponentScan("com.project.integration.serv")
 public class OrderService {
     private final OrderRepository orderRepository;
 
