@@ -17,30 +17,29 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
 public class ModelController {
-  private final OrderService orderService;
+    private final OrderService orderService;
 
-  @Autowired
-  public ModelController(OrderService orderService) {
-    this.orderService = orderService;
-  }
-
-  @GetMapping("/")
-  public String landingHome(Model model) {
-    model.addAttribute("orderForm", new OrderForm());
-    return "landing_home";
-  }
-
-  @RequestMapping(value = "/create_request", method = RequestMethod.POST)
-  public String createOrder(
-      @ModelAttribute("orderForm") @Valid OrderForm orderForm,
-      BindingResult bindingResult,
-      Model model) {
-    if (bindingResult.hasErrors()) {
-      Map<String, String> errorMap = ControllerUtils.getErrors(bindingResult);
-      model.mergeAttributes(errorMap);
-    } else {
-      orderService.create(PojoConverter.convertPojoToDto(orderForm));
+    @Autowired
+    public ModelController(OrderService orderService) {
+        this.orderService = orderService;
     }
-    return "landing_home";
-  }
+
+    @GetMapping("/")
+    public String landingHome(Model model) {
+        model.addAttribute("orderForm", new OrderForm());
+        return "landing_home";
+    }
+
+    @RequestMapping(value = "/create_request", method = RequestMethod.POST)
+    public String createOrder(@ModelAttribute("orderForm") @Valid OrderForm orderForm, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errorMap = ControllerUtils.getErrors(bindingResult);
+            model.mergeAttributes(errorMap);
+            model.addAttribute("isShowed", true);
+            model.addAttribute("formCorrector", 560 + errorMap.size() * 14);
+        } else {
+            orderService.create(PojoConverter.convertOrderPojoToDto(orderForm));
+        }
+        return "landing_home";
+    }
 }

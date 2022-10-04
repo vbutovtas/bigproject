@@ -3,25 +3,25 @@ package com.project.integration.serv.enums;
 import java.util.stream.Stream;
 
 public enum UserRoles {
-  ADMIN("ADMIN"),
-  MANAGER("MANAGER"),
-  EMPLOYEE("EMPLOYEE"),
-  CUSTOMER("CUSTOMER");
+  ADMIN(1),
+  MANAGER(2),
+  EMPLOYEE(3),
+  CUSTOMER(4);
 
-  private final String value;
+  private final int value;
 
-  UserRoles(String value) {
+  UserRoles(int value) {
     this.value = value;
   }
 
-  public static UserStatus getEnumByValue(String value) {
-    return Stream.of(UserStatus.values())
-        .filter(v -> v.getValue().equals(value))
+  public static UserRoles getEnumByValue(int value) {
+    return Stream.of(UserRoles.values())
+        .filter(v -> v.getValue() == value)
         .findFirst()
         .orElse(null);
   }
 
-  public String getValue() {
+  public int getValue() {
     return value;
   }
 }

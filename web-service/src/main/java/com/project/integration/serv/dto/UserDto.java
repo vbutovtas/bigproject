@@ -21,4 +21,11 @@ public class UserDto {
   String phone;
   UserStatus status;
   EmployeeDto employee;
+
+  public UserDto(String name, String surname, String email, String phone) {
+    this.name = name;
+    this.surname = surname;
+    this.email = email;
+    this.phone = phone;
+  }
 }

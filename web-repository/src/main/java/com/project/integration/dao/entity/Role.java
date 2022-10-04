@@ -31,4 +31,8 @@ public class Role {
 
   @OneToMany(mappedBy = "role", cascade = CascadeType.ALL)
   Set<User> users = new HashSet<>();
+
+  public Role(Integer id) {
+    this.id = id;
+  }
 }

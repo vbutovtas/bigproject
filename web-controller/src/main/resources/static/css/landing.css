@@ -1750,8 +1750,14 @@ footer .item.social {
   margin-bottom:0;
 }
 
-
 .active .carousel-item__image{
-transition: 0.6s all ease-in-out;
-transform: translateX(0);
+  transition: 0.6s all ease-in-out;
+  transform: translateX(0);
+}
+
+.is-invalid{
+  border: 1.5px red solid;
+}
+.invalid-feedback{
+  color: red;
 }
