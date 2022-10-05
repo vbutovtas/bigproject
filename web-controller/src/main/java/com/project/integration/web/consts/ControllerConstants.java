@@ -5,6 +5,6 @@ public interface ControllerConstants {
         String IS_SHOWED = "isShowed";
         String FORM_CORRECTOR = "formCorrector";
         String IS_SUCCESS = "isSuccess";
-        String ORDER_FORM = "ORDER_FORM";
+        String ORDER_FORM = "orderForm";
     }
 }

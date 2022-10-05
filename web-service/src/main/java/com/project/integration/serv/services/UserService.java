@@ -78,7 +78,7 @@ public class UserService implements UserDetailsService {
     User user = DtoConvertor.convertToUser(userDto);
     user.setStatus(UserStatus.DEACTIVATED.getValue());
     user.setRole(new Role(UserRoles.CUSTOMER.getValue()));
-    user.setPassword(generateCommonLangPassword());
+    user.setPassword(passwordEncoder.encode(generateCommonLangPassword()));
     user.setOrders(Collections.singleton(order));
     try {
       userRepository.save(user);
