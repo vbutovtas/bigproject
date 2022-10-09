@@ -16,11 +16,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 @Controller
-public class ModelController {
+public class ModalController {
   private final OrderService orderService;
 
   @Autowired
-  public ModelController(OrderService orderService) {
+  public ModalController(OrderService orderService) {
     this.orderService = orderService;
   }
 

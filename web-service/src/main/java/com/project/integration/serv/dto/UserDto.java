@@ -21,4 +21,12 @@ public class UserDto {
   String phone;
   UserStatus status;
   EmployeeDto employee;
+
+  public UserDto(String login, String name, String surname, String email, String phone) {
+    this.login = login;
+    this.name = name;
+    this.surname = surname;
+    this.email = email;
+    this.phone = phone;
+  }
 }
