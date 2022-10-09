@@ -46,4 +46,8 @@ public class Order {
     this.client = client;
     this.description = description;
   }
+
+  public Order(@NonNull Blob description) {
+    this.description = description;
+  }
 }

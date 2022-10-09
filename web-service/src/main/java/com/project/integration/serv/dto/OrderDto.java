@@ -18,4 +18,9 @@ public class OrderDto {
   Blob description;
   LocalDate startDate;
   BigDecimal cost;
+
+  public OrderDto(UserDto client, Blob description) {
+    this.client = client;
+    this.description = description;
+  }
 }

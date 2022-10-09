@@ -16,9 +16,18 @@
     <link rel='stylesheet' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css'>
     <link rel='stylesheet' href='https://codepen.io/CodeBoomer/pen/PzgWYp.css'>
     <link rel="stylesheet" href="../css/landing.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <link rel='stylesheet' href='https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&amp;display=swap'>
 
 </head>
 <body data-spy="scroll" data-target="#scroll-spy">
+<svg display="none">
+    <symbol id="success" viewBox="0 0 32 32">
+        <circle r="15" cx="16" cy="16" fill="none" stroke="hsl(93,90%,40%)" stroke-width="2"/>
+        <polyline points="9,18 13,22 23,12" fill="none" stroke="hsl(93,90%,40%)" stroke-width="2" stroke-linecap="round"
+                  stroke-linejoin="round"/>
+    </symbol>
+</svg>
 <nav class="navbar navbar-fixed-top">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -196,27 +205,36 @@
         </div>
     </div>
 </section>
-<div class="modal fade" id="submitModal" tabindex="-1" role="dialog" aria-labelledby="submitModalLabel"
-     aria-hidden="true" style="@{exist_error!=null} ? 'style=\'display: block; padding-right: 14px;\'' : '' ">
-    <div class="modal_popup">
+<div class="modal fade" id="submitModal" tabindex="-1" role="dialog"
+     aria-labelledby="submitModalLabel"
+     aria-hidden="true">
+    <div class="modal_popup" th:style="${isShowed} ? 'height:' + ${formCorrector} + 'px' : '' ">
         <div class="form">
             <form th:action="@{/create_request}" th:object="${orderForm}" method="post" enctype="multipart/form-data">
-                <div th:if="${exist_error!=null}" class="alert alert-danger">
-                    [[${exist_error}]]
-                </div>
                 <label for="first_name">First Name</label>
-                <input th:field="*{firstName}" id="first_name" type="text" required/>
-                <label for="last_name" >Last Name</label>
+                <input th:class="${#fields.hasErrors('firstName')}?'is-invalid':''" th:field="*{firstName}"
+                       id="first_name" type="text" required/>
+                <h6 th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"
+                    class="invalid-feedback"></h6>
+                <label for="last_name">Last Name</label>
                 <input th:field="*{lastName}" id="last_name" type="text" required/>
+                <h6 th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"
+                    class="invalid-feedback"></h6>
                 <label for="phone" required="required">Phone</label>
                 <input th:field="*{phone}" type="tel" id="phone" name="phone"
                        pattern="+{0-9}{12}"
                        required>
+                <h6 th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"
+                    class="invalid-feedback"></h6>
                 <label for="email">Email Address</label>
                 <input th:field="*{email}" id="email" type="email" required/>
+                <h6 th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
+                    class="invalid-feedback"></h6>
                 <div class="custom-file">
                     <label class="custom-file-label" for="file">Select file:</label>
                     <input class="custom-file-input" th:field="*{document}" type="file" id="file" name="file"/>
+                    <h6 th:if="${#fields.hasErrors('document')}" th:errors="*{document}"
+                        class="invalid-feedback"></h6>
                 </div>
                 <div class="col-xs-12">
                     <button class="tutorials-link" type="submit">Submit</button>
@@ -252,7 +270,16 @@
 </footer>
 </body>
 <!-- partial -->
+<script th:if="${isShowed}">
+   window.onload = () => {$('#submitModal').modal('show');}
+</script>
+<script th:if="${isSuccess}">
+    window.addEventListener("DOMContentLoaded",() => {
+        const nc = new NotificationCenter();
+    });
+</script>
 <script src='https://code.jquery.com/jquery-2.2.4.min.js'></script>
 <script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js'></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script src="../js/landing.js"></script>
 </html>
