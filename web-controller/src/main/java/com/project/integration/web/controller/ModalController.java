@@ -18,11 +18,11 @@ import javax.validation.Valid;
 import java.util.Map;
 
 @Controller
-public class ModelController {
+public class ModalController {
     private final OrderService orderService;
 
     @Autowired
-    public ModelController(OrderService orderService) {
+    public ModalController(OrderService orderService) {
         this.orderService = orderService;
     }
 

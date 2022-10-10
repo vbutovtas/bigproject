@@ -29,4 +29,10 @@ public class UserDto {
     this.email = email;
     this.phone = phone;
   }
+  public UserDto( String name, String surname, String email, String phone) {
+    this.name = name;
+    this.surname = surname;
+    this.email = email;
+    this.phone = phone;
+  }
 }
