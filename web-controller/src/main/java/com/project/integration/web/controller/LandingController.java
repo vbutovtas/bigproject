@@ -18,11 +18,11 @@ import javax.validation.Valid;
 import java.util.Map;
 
 @Controller
-public class LandingConroller {
+public class LandingController {
     private final OrderService orderService;
 
     @Autowired
-    public LandingConroller(OrderService orderService) {
+    public LandingController(OrderService orderService) {
         this.orderService = orderService;
     }
 
