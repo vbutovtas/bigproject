@@ -3,15 +3,23 @@ package com.project.integration.dao.entity;
 import java.io.Serializable;
 import java.sql.Blob;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import lombok.AccessLevel;
@@ -26,7 +34,6 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Setter
 @NoArgsConstructor
-@RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Employee implements Serializable {
   @Id
@@ -38,14 +45,15 @@ public class Employee implements Serializable {
   User user;
 
   @Column(name = "date_of_birth")
-  @NonNull
   LocalDate birthDate;
 
-  @NonNull String position;
-  @NonNull String technologies;
+  String position;
+  String technologies;
 
-  @NonNull
-  @Column(name = "work_experience")
+  @Column(name = "start_date")
+  LocalDate startDate;
+
+  @Column(name = "experience_before")
   Float experience;
 
   Blob photo;
@@ -58,4 +66,34 @@ public class Employee implements Serializable {
 
   @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
   Set<Comment> comments = new HashSet<>();
+
+  @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+  @JoinTable(
+      name = "projects_has_employees",
+      joinColumns = @JoinColumn(name = "employees_id"),
+      inverseJoinColumns = @JoinColumn(name = "tickets_id"))
+  Set<Ticket> projects = new HashSet<>();
+
+  public Employee(Integer id, User user, LocalDate birthDate, String position,
+      String technologies, Blob photo) {
+    this.id = id;
+    this.user = user;
+    this.birthDate = birthDate;
+    this.position = position;
+    this.technologies = technologies;
+
+    //DON'T DELETE. IT'S USEFUL WHEN MANAGER WILL CREATE EMPLOYEE ACC
+
+//    if( Objects.nonNull(experienceString)){
+//      Pattern integerPattern = Pattern.compile("\\d+");
+//      Matcher matcher = integerPattern.matcher(experienceString);
+//      List<String> integerList = new ArrayList<>();
+//      while (matcher.find()) {
+//        integerList.add(matcher.group());
+//      }
+//      this.experience =
+//          Float.parseFloat(integerList.get(0)) + Float.parseFloat(integerList.get(1)) / 12;
+//    }
+    this.photo = photo;
+  }
 }

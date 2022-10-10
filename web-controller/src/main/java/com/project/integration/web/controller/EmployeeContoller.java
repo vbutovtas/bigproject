@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,5 +26,11 @@ public class EmployeeContoller {
   public ResponseEntity<EmployeeDto> create(@PathVariable("id") Integer id) {
     EmployeeDto employeeDto = employeeService.findById(id);
     return new ResponseEntity<>(employeeDto, HttpStatus.OK);
+  }
+
+  @PutMapping(value = "/{id}")
+  public ResponseEntity<Void> update(@RequestBody EmployeeDto employeeDto, @PathVariable("id") Integer id){
+    employeeService.update(employeeDto, id);
+    return new ResponseEntity<>(HttpStatus.OK);
   }
 }

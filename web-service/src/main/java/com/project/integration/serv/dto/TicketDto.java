@@ -1,5 +1,6 @@
 package com.project.integration.serv.dto;
 
+import com.project.integration.dao.entity.Employee;
 import com.project.integration.serv.enums.TicketSeverity;
 import com.project.integration.serv.enums.TicketStatus;
 import com.project.integration.serv.enums.TicketType;
@@ -29,4 +30,10 @@ public class TicketDto {
   TicketSeverity severity;
   String gitRef;
   Set<CommentDto> comments = new HashSet<>();
+  Set<Employee> employees = new HashSet<>();
+
+  public TicketDto(Integer id, String name) {
+    this.id = id;
+    this.name = name;
+  }
 }

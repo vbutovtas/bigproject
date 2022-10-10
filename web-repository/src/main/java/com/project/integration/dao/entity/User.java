@@ -30,18 +30,17 @@ public class User {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   Integer id;
 
-  @NonNull
   @ManyToOne
   @JoinColumn(name = "role_id")
   Role role;
 
   @NonNull String login;
-  @NonNull String password;
+  String password;
   @NonNull String name;
   @NonNull String surname;
   @NonNull String email;
   @NonNull String phone;
-  @NonNull String status;
+  String status;
 
   @OneToOne(mappedBy = "user")
   Employee employee;
@@ -50,19 +49,31 @@ public class User {
   Set<Order> orders = new HashSet<>();
 
   public User(
-      @NonNull String name, @NonNull String surname, @NonNull String email, @NonNull String phone) {
-    this.name = name;
-    this.surname = surname;
-    this.email = email;
-    this.phone = phone;
-  }
-
-  public User(String login, String password, String name, String surname, String email, String phone) {
+      String login, String password, String name, String surname, String email, String phone) {
     this.login = login;
     this.password = password;
     this.name = name;
     this.surname = surname;
     this.email = email;
     this.phone = phone;
+  }
+
+  public User(
+      Role role,
+      String login,
+      String password,
+      String name,
+      String surname,
+      String email,
+      String phone,
+      String status) {
+    this.role = role;
+    this.login = login;
+    this.password = password;
+    this.name = name;
+    this.surname = surname;
+    this.email = email;
+    this.phone = phone;
+    this.status = status;
   }
 }

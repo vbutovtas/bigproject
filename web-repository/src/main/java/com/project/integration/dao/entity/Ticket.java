@@ -10,13 +10,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.FieldDefaults;
 
@@ -24,7 +23,6 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Setter
 @NoArgsConstructor
-@RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Ticket {
   @Id
@@ -43,9 +41,9 @@ public class Ticket {
   @JoinColumn(name = "ticket_id")
   Ticket ticket;
 
-  @NonNull String name;
+  String name;
 
-  @NonNull String description;
+  String description;
 
   @Column(name = "due_date")
   LocalDate dueDate;
@@ -56,14 +54,18 @@ public class Ticket {
   @Column(name = "logged_time")
   Float loggedTime;
 
-  @NonNull String status;
+  String status;
 
-  @NonNull String type;
+  String type;
 
-  @NonNull String severity;
+  String severity;
 
-  @NonNull String gitRef;
+  @Column(name = "git")
+  String gitRef;
 
   @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL)
   Set<Comment> comments = new HashSet<>();
+
+  @ManyToMany(mappedBy = "projects")
+  Set<Employee> employees = new HashSet<>();
 }
