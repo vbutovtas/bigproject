@@ -119,15 +119,19 @@ public class EmployeeService {
       employee.setPosition(initialEmployee.get().getPosition());
     if (Objects.isNull(employee.getTechnologies()))
       employee.setTechnologies(initialEmployee.get().getTechnologies());
+    if (Objects.isNull(employee.getStartDate()))
+      employee.setStartDate(initialEmployee.get().getStartDate());
     if (Objects.isNull(employee.getExperience()))
       employee.setExperience(initialEmployee.get().getExperience());
     if (Objects.isNull(employee.getPhoto())) employee.setPhoto(initialEmployee.get().getPhoto());
-    if (Objects.isNull(employee.getAssigneeTickets()))
+    if (employee.getAssigneeTickets().size()==0)
       employee.setAssigneeTickets(initialEmployee.get().getAssigneeTickets());
-    if (Objects.isNull(employee.getReporterTickets()))
+    if (employee.getReporterTickets().size()==0)
       employee.setReporterTickets(initialEmployee.get().getReporterTickets());
-    if (Objects.isNull(employee.getComments()))
+    if (employee.getComments().size()==0)
       employee.setComments(initialEmployee.get().getComments());
+    if (employee.getProjects().size()==0)
+      employee.setProjects(initialEmployee.get().getProjects());
   }
 
   private void prepareUserForUpdate(User user, String login) {
