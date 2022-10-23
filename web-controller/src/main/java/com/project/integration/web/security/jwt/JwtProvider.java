@@ -10,8 +10,11 @@ import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
 import io.jsonwebtoken.UnsupportedJwtException;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,16 +48,13 @@ public class JwtProvider {
 
   public String generateToken(UserDetails userDetails) {
     Map<String, Object> claims = new HashMap<>();
-
     Collection<? extends GrantedAuthority> roles = userDetails.getAuthorities();
 
-    //TODO
-//    if (roles.contains(new SimpleGrantedAuthority(UserRoles.ADMIN.toString()))) {
-//      claims.put(Attributes.IS_ADMIN, true);
-//    }
-//    if (roles.contains(new SimpleGrantedAuthority(UserRoles.USER.toString()))) {
-//      claims.put(Attributes.IS_USER, true);
-//    }
+    for (UserRoles role : UserRoles.values()) {
+      if (roles.contains(new SimpleGrantedAuthority(role.toString()))) {
+        claims.put(Attributes.ROLE, role.toString());
+      }
+    }
 
     return doGenerateToken(claims, userDetails.getUsername(), jwtExpirationInMs);
   }
@@ -92,22 +92,8 @@ public class JwtProvider {
 
   public List<SimpleGrantedAuthority> getRolesFromToken(String token) {
     Claims claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
-
-    List<SimpleGrantedAuthority> roles = null;
-
-    //TODO
-//    Boolean isAdmin = claims.get(Attributes.IS_ADMIN, Boolean.class);
-//    Boolean isUser = claims.get(Attributes.IS_USER, Boolean.class);
-//
-//    if (Boolean.TRUE.equals(isAdmin)) {
-//      roles = List.of(new SimpleGrantedAuthority(UserRoles.ADMIN.toString()));
-//    }
-//
-//    if (Boolean.TRUE.equals(isUser)) {
-//      roles = List.of(new SimpleGrantedAuthority(UserRoles.USER.toString()));
-//    }
-
-    return roles;
+    String authority = claims.get(Attributes.ROLE, String.class);
+    return Collections.singletonList(new SimpleGrantedAuthority(authority));
   }
 
   public Boolean isRefreshAvailable(ExpiredJwtException e) {

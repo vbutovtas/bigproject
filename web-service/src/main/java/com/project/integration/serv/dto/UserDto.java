@@ -21,7 +21,6 @@ public class UserDto {
   String email;
   String phone;
   UserStatus status;
-  EmployeeDto employee;
 
   public UserDto(Integer id, Role role, String login, String name, String surname, String email, String phone) {
     this.id = id;

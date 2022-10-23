@@ -4,7 +4,7 @@ select * from users;
 
 select * from employees;
 
-select * from tickets;
+select * from tickets order by tickets.status, tickets.order;
 
 select * from projects_has_employees;
 
@@ -21,6 +21,64 @@ insert into employees values (default, 1, '1998-05-16', 'Middle Java developer',
 insert into employees values (default, 2, '1980-10-01', 'Senior Java developer', 'Java, Spring, Hibernate, Docker', '2015-01-17', '3.5', null);
 
 insert into tickets values (default, 1, 1, null, 'project1', 'description1',  '2024-01-01', 0, 0, 'OPEN', 'PROJECT', 
-2, 'https://github.com/vbutovtas/bigproject');
+2, 'https://github.com/vbutovtas/bigproject', 1);
+insert into tickets values (default, 2, 2, 1, 'ticket1', 'ticket1description1',  '2024-01-01', 0, 0, 'OPEN', 'TASK', 
+2, 'https://github.com/vbutovtas/bigproject', 2);
+insert into tickets values (default, 2, 2, 1, 'ticket2', 'ticket1description2',  '2024-01-01', 0, 0, 'OPEN', 'TASK', 
+2, 'https://github.com/vbutovtas/bigproject', 3);
+insert into tickets values (default, 2, 2, 1, 'ticket3', 'ticket1description3',  '2024-01-01', 0, 0, 'IN_BUILD', 'TASK', 
+2, 'https://github.com/vbutovtas/bigproject', 4);
+insert into tickets values (default, 2, 2, 1, 'ticket4', 'ticket1description3',  '2024-01-01', 0, 0, 'IN_BUILD', 'TASK', 
+2, 'https://github.com/vbutovtas/bigproject', 5);
+insert into tickets values (default, 2, 2, 1, 'ticket5', 'ticket1description3',  '2024-01-01', 0, 0, 'IN_BUILD', 'TASK', 
+2, 'https://github.com/vbutovtas/bigproject', 6);
 
 insert into projects_has_employees values (1, 1);
+
+
+DROP PROCEDURE IF EXISTS reorderTickets;
+delimiter $$
+CREATE PROCEDURE reorderTickets(IN ticket_id INT, IN startOrder INT, IN startColumn VARCHAR(30), IN finishOrder INT, IN finishColumn VARCHAR(30))
+BEGIN
+	DECLARE id int;
+	DECLARE order_value varchar(30);
+    DECLARE cursor_finished int DEFAULT 0;
+	DECLARE curStartColumn 
+		CURSOR FOR 
+			SELECT tickets.id, tickets.order FROM tickets 
+				where tickets.status = startColumn AND tickets.order > startOrder;
+	DECLARE curFinishColumn 
+		CURSOR FOR 
+			SELECT tickets.id, tickets.order FROM tickets 
+				where tickets.status = finishColumn AND tickets.order >= finishOrder;	
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET cursor_finished = 1;
+	
+	OPEN curStartColumn;
+    startColumn_loop: LOOP
+		FETCH curStartColumn INTO id, order_value;
+		IF cursor_finished = 1 THEN LEAVE startColumn_loop;
+		END IF;
+        update tickets set tickets.order = order_value - 1 where tickets.id = id;
+    END LOOP startColumn_loop;
+    CLOSE curStartColumn;
+    SET cursor_finished = 0;
+    
+	OPEN curFinishColumn;
+    finishColumn_loop: LOOP
+		FETCH curFinishColumn INTO id, order_value;
+		IF cursor_finished = 1 THEN LEAVE finishColumn_loop;
+		END IF;
+        update tickets set tickets.order = order_value + 1 where tickets.id = id;
+    END LOOP finishColumn_loop;
+    CLOSE curFinishColumn; 
+    
+    update tickets set tickets.order = finishOrder, tickets.status = finishColumn where tickets.id = ticket_id;
+    commit;
+END$$
+delimiter ;
+
+
+CALL reorderTickets(5, 1, 'IN_BUILD', 1, 'OPEN');
+
+select * from tickets order by tickets.status, tickets.order;
+

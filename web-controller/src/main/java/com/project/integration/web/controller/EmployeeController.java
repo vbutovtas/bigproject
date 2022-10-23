@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping(value = "/employee")
-public class EmployeeContoller {
+public class EmployeeController {
   private final EmployeeService employeeService;
 
   @Autowired
-  public EmployeeContoller(EmployeeService employeeService) {
+  public EmployeeController(EmployeeService employeeService) {
     this.employeeService = employeeService;
   }
 

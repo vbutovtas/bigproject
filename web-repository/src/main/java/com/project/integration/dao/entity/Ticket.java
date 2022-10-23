@@ -58,10 +58,12 @@ public class Ticket {
 
   String type;
 
-  String severity;
+  Integer severity;
 
   @Column(name = "git")
   String gitRef;
+
+  Integer order;
 
   @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL)
   Set<Comment> comments = new HashSet<>();

@@ -15,8 +15,8 @@ public enum TicketStatus {
     this.value = value;
   }
 
-  public static UserStatus getEnumByValue(String value) {
-    return Stream.of(UserStatus.values())
+  public static TicketStatus getEnumByValue(String value) {
+    return Stream.of(TicketStatus.values())
         .filter(v -> v.getValue().equals(value))
         .findFirst()
         .orElse(null);

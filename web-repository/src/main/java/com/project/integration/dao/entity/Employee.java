@@ -83,6 +83,7 @@ public class Employee implements Serializable {
     this.technologies = technologies;
 
     //DON'T DELETE. IT'S USEFUL WHEN MANAGER WILL CREATE EMPLOYEE ACC
+    //IT'S USED TO PARSE WORK EXPERIENCE FROM STRING
 
 //    if( Objects.nonNull(experienceString)){
 //      Pattern integerPattern = Pattern.compile("\\d+");

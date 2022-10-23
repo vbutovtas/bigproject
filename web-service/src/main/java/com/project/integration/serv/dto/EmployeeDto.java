@@ -3,8 +3,6 @@ package com.project.integration.serv.dto;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.temporal.ChronoUnit;
-import java.util.HashSet;
-import java.util.Set;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,10 +20,7 @@ public class EmployeeDto {
   LocalDate startDate;
   String experience;
   String photo;
-  Set<TicketDto> assigneeTickets = new HashSet<>();
-  Set<TicketDto> reporterTickets = new HashSet<>();
-  Set<CommentDto> comments = new HashSet<>();
-  TicketDto currentProject;
+  TicketDto currentProject; // TODO
   int projectsCount;
 
   public EmployeeDto(
@@ -48,8 +43,7 @@ public class EmployeeDto {
     long monthsBetween =
         ChronoUnit.MONTHS.between(YearMonth.from(startDate), YearMonth.from(LocalDate.now()));
     long years = experience.intValue() + monthsBetween / 12;
-    long months =
-        (int) ((experience - experience.intValue()) * 12) + monthsBetween % 12;
+    long months = (int) ((experience - experience.intValue()) * 12) + monthsBetween % 12;
     years += months / 12;
     months %= 12;
     this.experience = String.format("%1$d год, %2$d месяцев", years, months);
