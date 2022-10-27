@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import com.project.integration.serv.enums.TicketType;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
@@ -54,6 +56,10 @@ public class TicketService {
       // TODO convert to dtos
       return convertToDto(tickets);
     } else throw new RuntimeException("project does not exist"); // TODO
+  }
+
+  public List<TicketDto> getProjects(){
+      return convertToDto(ticketRepository.findByType(TicketType.PROJECT.getValue()));
   }
 
   public void reorder(Integer id, Integer destination, TicketStatus destinationColumn) {
