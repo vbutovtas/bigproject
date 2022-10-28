@@ -15,7 +15,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @ComponentScan("com.project.integration.serv")
 public class ServiceConfig {
   @Bean
-  public ModelMapper modelMapper(){
+  public ModelMapper modelMapper() {
     return new ModelMapper();
   }
 }

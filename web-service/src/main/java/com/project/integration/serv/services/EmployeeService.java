@@ -9,6 +9,7 @@ import com.project.integration.serv.dto.EmployeeDto;
 import com.project.integration.serv.dto.TicketDto;
 import com.project.integration.serv.dto.UserDto;
 import com.project.integration.serv.enums.TicketStatus;
+import com.project.integration.serv.mapper.EmployeeMapper;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.Base64;
@@ -25,56 +26,19 @@ import org.springframework.stereotype.Service;
 public class EmployeeService {
   private final EmployeeRepository employeeRepository;
   private final UserRepository userRepository;
+  private final EmployeeMapper employeeMapper;
 
   @Autowired
-  public EmployeeService(EmployeeRepository employeeRepository, UserRepository userRepository) {
+  public EmployeeService(EmployeeRepository employeeRepository, UserRepository userRepository, EmployeeMapper employeeMapper) {
     this.employeeRepository = employeeRepository;
     this.userRepository = userRepository;
+    this.employeeMapper = employeeMapper;
   }
 
   public EmployeeDto findById(Integer id) {
     Optional<Employee> employee = employeeRepository.findById(id);
     if (employee.isPresent()) {
-      UserDto userDto =
-          new UserDto(
-              employee.get().getUser().getId(),
-              employee.get().getUser().getRole(),
-              employee.get().getUser().getLogin(),
-              employee.get().getUser().getName(),
-              employee.get().getUser().getSurname(),
-              employee.get().getUser().getEmail(),
-              employee.get().getUser().getPhone());
-      String photoEncoded = null;
-      try {
-        if(Objects.nonNull(employee.get().getPhoto())){
-          byte[] photoAsBytes =
-              employee.get().getPhoto().getBytes(1, (int) employee.get().getPhoto().length());
-          photoEncoded = Base64.getEncoder().encodeToString(photoAsBytes);
-        }
-      } catch (SQLException e) {
-        throw new RuntimeException(e);
-      }
-      Optional<Ticket> currentProject =
-          employee.get().getProjects().stream()
-              .filter(ticket -> !ticket.getStatus().equals(TicketStatus.CLOSE.getValue()))
-              .findFirst();
-      TicketDto currProjectDto = null;
-      if (currentProject.isPresent())
-        currProjectDto =
-            new TicketDto(
-                currentProject.get().getId(),
-                currentProject.get().getName());
-      return new EmployeeDto(
-          employee.get().getId(),
-          userDto,
-          employee.get().getBirthDate(),
-          employee.get().getPosition(),
-          employee.get().getTechnologies(),
-          employee.get().getStartDate(),
-          employee.get().getExperience(),
-          photoEncoded,
-          employee.get().getProjects().size(),
-          currProjectDto);
+      return employeeMapper.convertToDto(employee.get());
     } else throw new RuntimeException("employee not found"); // TODO
   }
 
