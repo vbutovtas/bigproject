@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TicketRepository extends JpaRepository<Ticket, Integer> {
   List<Ticket> findByTicketOrderByOrder(Ticket project);
+  List<Ticket> findByType(String type);
 
   Optional<Ticket> findByOrder(Integer order);
 
