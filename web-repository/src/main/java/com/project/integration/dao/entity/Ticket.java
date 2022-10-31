@@ -1,6 +1,7 @@
 package com.project.integration.dao.entity;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.CascadeType;
@@ -45,8 +46,11 @@ public class Ticket {
 
   String description;
 
+  @Column(name = "create_date")
+  LocalDateTime createDate;
+
   @Column(name = "due_date")
-  LocalDate dueDate;
+  LocalDateTime dueDate;
 
   @Column(name = "estimated_time")
   Float estimatedTime;

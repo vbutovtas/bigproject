@@ -16,9 +16,6 @@ public interface TicketRepository extends JpaRepository<Ticket, Integer> {
   Optional<Ticket> findByOrder(Integer order);
 
   @Procedure(procedureName = "reorderTickets")
-  int getTotalCarsByModelProcedureName(String model);
-
-  @Procedure(procedureName = "reorderTickets")
   void reorderTickets(
       @Param("id") Integer id,
       @Param("startOrder") Integer startOrder,

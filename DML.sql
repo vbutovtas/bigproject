@@ -20,17 +20,19 @@ insert into users values (default, 3, 'user2', '1234', 'name2', 'surname2', 'ema
 insert into employees values (default, 1, '1998-05-16', 'Middle Java developer', 'Java, Spring, Hibernate', '2018-11-29', '1.2', null);
 insert into employees values (default, 2, '1980-10-01', 'Senior Java developer', 'Java, Spring, Hibernate, Docker', '2015-01-17', '3.5', null);
 
-insert into tickets values (default, 1, 1, null, 'project1', 'description1',  '2024-01-01', 0, 0, 'OPEN', 'PROJECT', 
+insert into tickets values (default, 1, 1, null, 'project1', 'description1', NOW(),  '2024-01-01', 0, 0, 'OPEN', 'PROJECT', 
 2, 'https://github.com/vbutovtas/bigproject', 1);
-insert into tickets values (default, 2, 2, 1, 'ticket1', 'ticket1description1',  '2024-01-01', 0, 0, 'OPEN', 'TASK', 
-2, 'https://github.com/vbutovtas/bigproject', 2);
-insert into tickets values (default, 2, 2, 1, 'ticket2', 'ticket1description2',  '2024-01-01', 0, 0, 'OPEN', 'TASK', 
+insert into tickets values (default, 2, 2, 1, 'ticket1', 'ticket1description1', NOW(), '2024-01-01', 0, 0, 'OPEN', 'TASK', 
+1, 'https://github.com/vbutovtas/bigproject', 2);
+insert into tickets values (default, 2, 2, 1, 'ticket2', 'ticket1description2', NOW(), '2024-01-01', 0, 0, 'OPEN', 'TASK', 
 2, 'https://github.com/vbutovtas/bigproject', 3);
-insert into tickets values (default, 2, 2, 1, 'ticket3', 'ticket1description3',  '2024-01-01', 0, 0, 'IN_BUILD', 'TASK', 
-2, 'https://github.com/vbutovtas/bigproject', 4);
-insert into tickets values (default, 2, 2, 1, 'ticket4', 'ticket1description3',  '2024-01-01', 0, 0, 'IN_BUILD', 'TASK', 
-2, 'https://github.com/vbutovtas/bigproject', 5);
-insert into tickets values (default, 2, 2, 1, 'ticket5', 'ticket1description3',  '2024-01-01', 0, 0, 'IN_BUILD', 'TASK', 
+insert into tickets values (default, 2, 2, 1, 'ticket3', 'ticket1description3', NOW(), '2024-01-01', 0, 0, 'IN_BUILD', 'TASK', 
+3, 'https://github.com/vbutovtas/bigproject', 4);
+insert into tickets values (default, 2, 2, 1, 'ticket4', 'ticket1description3', NOW(), '2024-01-01', 0, 0, 'IN_BUILD', 'TASK', 
+4, 'https://github.com/vbutovtas/bigproject', 5);
+insert into tickets values (default, 2, 2, 1, 'ticket5', 'ticket1description3', NOW(), '2024-01-01', 0, 0, 'IN_BUILD', 'TASK', 
+2, 'https://github.com/vbutovtas/bigproject', 6);
+insert into tickets values (default, 2, 2, 1, 'ticket6', 'ticket1description3', NOW(), '2022-10-31 15:12:56', 0, 0, 'IN_BUILD', 'TASK', 
 2, 'https://github.com/vbutovtas/bigproject', 6);
 
 insert into projects_has_employees values (1, 1);
@@ -79,6 +81,4 @@ delimiter ;
 
 
 CALL reorderTickets(5, 1, 'IN_BUILD', 1, 'OPEN');
-
-select * from tickets order by tickets.status, tickets.order;
 
