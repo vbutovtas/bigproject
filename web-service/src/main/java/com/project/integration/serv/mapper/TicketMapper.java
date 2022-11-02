@@ -26,44 +26,23 @@ public class TicketMapper {
   public TicketMapper(ModelMapper modelMapper) {
     this.modelMapper = modelMapper;
 
-    TypeMap<Ticket, TicketDto> ticketMapper =
+    TypeMap<Ticket, TicketDto> ticketToDtoMapper =
         this.modelMapper.createTypeMap(Ticket.class, TicketDto.class);
-    Converter<Integer, TicketSeverity> severityConverter =
+    Converter<Integer, TicketSeverity> severityToDtoConverter =
         ctx -> TicketSeverity.getEnumByValue(ctx.getSource());
-    ticketMapper.addMappings(
-        mapper -> mapper.using(severityConverter).map(Ticket::getSeverity, TicketDto::setSeverity));
+    ticketToDtoMapper.addMappings(
+        mapper -> mapper.using(severityToDtoConverter).map(Ticket::getSeverity, TicketDto::setSeverity));
 
-    //    Converter<Blob, String> photoConverter = ctx -> {
-    //      try {
-    //        if(Objects.nonNull(ctx.getSource())){
-    //          byte[] photoAsBytes = ctx.getSource().getBytes(1, (int) ctx.getSource().length());
-    //          return Base64.getEncoder().encodeToString(photoAsBytes);
-    //        } else return "";
-    //      } catch (Exception e) {
-    //        throw new RuntimeException(e); // TODO
-    //      }
-    //    };
-    //
-    //    ticketMapper.addMappings(
-    //        mapper -> mapper.using(photoConverter).map(src -> src.getAssignee().getPhoto(),
-    // TicketDto::getAssignee));
+    TypeMap<TicketDto, Ticket> ticketToEntityMapper =
+        this.modelMapper.createTypeMap(TicketDto.class, Ticket.class);
+    Converter<TicketSeverity, Integer> severityToEntityConverter =
+        ctx -> ctx.getSource().getValue();
+    ticketToEntityMapper.addMappings(
+        mapper -> mapper.using(severityToEntityConverter).map(TicketDto::getSeverity, Ticket::setSeverity));
+  }
 
-    //    modelMapper.addMappings(new PropertyMap<Ticket, TicketDto>() {
-    //      @Override
-    //      protected void configure() {
-    //        if(Objects.nonNull(source.getAssignee().getPhoto())){
-    //          try{
-    //            byte[] photoAsBytes = source.getAssignee().getPhoto().getBytes(1, (int)
-    // source.getAssignee().getPhoto().length());
-    //            String base64String = Base64.getEncoder().encodeToString(photoAsBytes);
-    //            map().getAssignee().setPhoto(base64String);
-    //          } catch (SQLException e){
-    //            throw new RuntimeException(e); //TODO
-    //          }
-    //        }
-    //      }
-    //    });
-
+  public Ticket convertToEntity(TicketDto ticketDto){
+    return modelMapper.map(ticketDto, Ticket.class);
   }
 
   public List<TicketDto> convertToDto(List<Ticket> ticketList) {
