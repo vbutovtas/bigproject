@@ -79,9 +79,9 @@ public class UserService implements UserDetailsService {
     user.setStatus(UserStatus.DEACTIVATED.getValue());
     user.setRole(new Role(UserRoles.CUSTOMER.getValue()));
     user.setPassword(passwordEncoder.encode(generateCommonLangPassword()));
-    user.setOrders(Collections.singleton(order));
     try {
       userRepository.save(user);
+      user.setOrders(Collections.singleton(order));
     } catch (Exception e) {
       throw new RuntimeException("Failed to create user: " + user, e);
     }
