@@ -34,12 +34,12 @@ public class User {
   @JoinColumn(name = "role_id")
   Role role;
 
-  @NonNull String login;
+  String login;
   String password;
   @NonNull String name;
   @NonNull String surname;
-  @NonNull String email;
-  @NonNull String phone;
+  String email;
+  String phone;
   String status;
 
   @OneToOne(mappedBy = "user")
@@ -50,6 +50,15 @@ public class User {
 
   public User(
       String login, String password, String name, String surname, String email, String phone) {
+    this.login = login;
+    this.password = password;
+    this.name = name;
+    this.surname = surname;
+    this.email = email;
+    this.phone = phone;
+  }
+
+  public User(String login, String name, String surname, String email, String phone) {
     this.login = login;
     this.password = password;
     this.name = name;

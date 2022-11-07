@@ -67,6 +67,7 @@ public class Ticket {
   @Column(name = "git")
   String gitRef;
 
+  @Column(name = "order_number")
   Integer order;
 
   @OneToMany(mappedBy = "ticket", cascade = CascadeType.ALL)

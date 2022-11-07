@@ -1,6 +1,7 @@
 package com.project.integration.serv.security;
 
 import com.project.integration.dao.entity.User;
+import com.project.integration.serv.enums.UserStatus;
 import java.util.Collection;
 import java.util.Collections;
 import lombok.AllArgsConstructor;
@@ -14,11 +15,18 @@ public class UserDetailsImpl implements UserDetails {
   private String password;
   private Collection<? extends GrantedAuthority> grantedAuthorities;
 
+  private UserStatus status;
+
   public static UserDetails fromUserEntityToUserDetails(User userEntity) {
     return new UserDetailsImpl(
         userEntity.getLogin(),
-        userEntity.getPassword(), //TODO
-        Collections.singletonList(new SimpleGrantedAuthority(userEntity.getRole().getName())));
+        userEntity.getPassword(),
+        Collections.singletonList(new SimpleGrantedAuthority(userEntity.getRole().getName())),
+        UserStatus.getEnumByValue(userEntity.getStatus()));
+  }
+
+  public UserStatus getStatus() {
+    return status;
   }
 
   @Override
@@ -29,7 +37,7 @@ public class UserDetailsImpl implements UserDetails {
   @Override
   public String getPassword() {
     return password;
-  } //TODO
+  }
 
   @Override
   public String getUsername() {
@@ -38,13 +46,13 @@ public class UserDetailsImpl implements UserDetails {
 
   @Override
   public boolean isAccountNonExpired() {
-    return true;
-  }
+    return !UserStatus.DEACTIVATED.equals(status);
+  }//TODO catch exception when account is locked
 
   @Override
   public boolean isAccountNonLocked() {
-    return true;
-  }
+    return !UserStatus.BLOCKED.equals(status);
+  }//TODO catch exception when account is locked
 
   @Override
   public boolean isCredentialsNonExpired() {
@@ -53,6 +61,6 @@ public class UserDetailsImpl implements UserDetails {
 
   @Override
   public boolean isEnabled() {
-    return true;
-  }
+    return UserStatus.ACTIVE.equals(status);
+  }//TODO catch exception when account is locked
 }

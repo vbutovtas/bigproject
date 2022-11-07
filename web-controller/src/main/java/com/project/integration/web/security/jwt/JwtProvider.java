@@ -1,6 +1,8 @@
 package com.project.integration.web.security.jwt;
 
 import com.project.integration.serv.enums.UserRoles;
+import com.project.integration.serv.enums.UserStatus;
+import com.project.integration.serv.security.UserDetailsImpl;
 import com.project.integration.web.consts.Attributes;
 import com.project.integration.web.consts.PropertiesKeys;
 import io.jsonwebtoken.Claims;
@@ -56,6 +58,8 @@ public class JwtProvider {
       }
     }
 
+    claims.put(Attributes.STATUS, ((UserDetailsImpl)userDetails).getStatus());
+
     return doGenerateToken(claims, userDetails.getUsername(), jwtExpirationInMs);
   }
 
@@ -94,6 +98,11 @@ public class JwtProvider {
     Claims claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
     String authority = claims.get(Attributes.ROLE, String.class);
     return Collections.singletonList(new SimpleGrantedAuthority(authority));
+  }
+
+  public UserStatus getStatusFromToken(String token){
+    Claims claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
+    return claims.get(Attributes.STATUS, UserStatus.class);
   }
 
   public Boolean isRefreshAvailable(ExpiredJwtException e) {

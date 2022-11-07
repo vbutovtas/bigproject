@@ -4,7 +4,7 @@ select * from users;
 
 select * from employees;
 
-select * from tickets order by tickets.status, tickets.order;
+select * from tickets order by tickets.status, tickets.order_number;
 
 select * from projects_has_employees;
 
@@ -16,9 +16,15 @@ insert into roles values(default, 'CUSTOMER');
 
 insert into users values (default, 3, 'user1', '1234', 'name1', 'surname1', 'email1', 'phone1', 'ACTIVE');
 insert into users values (default, 3, 'user2', '1234', 'name2', 'surname2', 'email2', 'phone2', 'ACTIVE');
+insert into users values (default, 2, 'manager1', '1234', 'name3', 'surname3', 'email3', 'phone3', 'ACTIVE');
+insert into users values (default, 3, 'qwert', '1234', 'Vitaliy', 'Butovtas', 'qwerrt@mail.ru', '+643234', 'ACTIVE');
+insert into users values (default, 3, 'liza', '1234', 'Liza', 'Ivanova', 'liza@gmail.com', '+34563231', 'ACTIVE');
 
 insert into employees values (default, 1, '1998-05-16', 'Middle Java developer', 'Java, Spring, Hibernate', '2018-11-29', '1.2', null);
 insert into employees values (default, 2, '1980-10-01', 'Senior Java developer', 'Java, Spring, Hibernate, Docker', '2015-01-17', '3.5', null);
+insert into employees values (default, 3, '1980-10-01', 'Senior Java developer', 'Java, Spring, Hibernate, Docker', '2015-01-17', '3.5', null);
+insert into employees values (default, 4, '1997-12-21', 'Middle Java developer | Dev Lead', 'Java, Spring, Hibernate, Jenkins', '2015-01-17', '2.3', null);
+insert into employees values (default, 5, '2002-07-23', 'Junior Java developer', 'Java, Spring, Hibernate', '2015-01-17', '0.5', null);
 
 insert into tickets values (default, 1, 1, null, 'project1', 'description1', NOW(),  '2024-01-01', 0, 0, 'OPEN', 'PROJECT', 
 2, 'https://github.com/vbutovtas/bigproject', 1);
@@ -47,12 +53,12 @@ BEGIN
     DECLARE cursor_finished int DEFAULT 0;
 	DECLARE curStartColumn 
 		CURSOR FOR 
-			SELECT tickets.id, tickets.order FROM tickets 
-				where tickets.status = startColumn AND tickets.order > startOrder;
+			SELECT tickets.id, tickets.order_number FROM tickets 
+				where tickets.status = startColumn AND tickets.order_number > startOrder;
 	DECLARE curFinishColumn 
 		CURSOR FOR 
-			SELECT tickets.id, tickets.order FROM tickets 
-				where tickets.status = finishColumn AND tickets.order >= finishOrder;	
+			SELECT tickets.id, tickets.order_number FROM tickets 
+				where tickets.status = finishColumn AND tickets.order_number >= finishOrder;	
 	DECLARE CONTINUE HANDLER FOR NOT FOUND SET cursor_finished = 1;
 	
 	OPEN curStartColumn;
@@ -60,7 +66,7 @@ BEGIN
 		FETCH curStartColumn INTO id, order_value;
 		IF cursor_finished = 1 THEN LEAVE startColumn_loop;
 		END IF;
-        update tickets set tickets.order = order_value - 1 where tickets.id = id;
+        update tickets set tickets.order_number = order_value - 1 where tickets.id = id;
     END LOOP startColumn_loop;
     CLOSE curStartColumn;
     SET cursor_finished = 0;
@@ -70,11 +76,11 @@ BEGIN
 		FETCH curFinishColumn INTO id, order_value;
 		IF cursor_finished = 1 THEN LEAVE finishColumn_loop;
 		END IF;
-        update tickets set tickets.order = order_value + 1 where tickets.id = id;
+        update tickets set tickets.order_number = order_value + 1 where tickets.id = id;
     END LOOP finishColumn_loop;
     CLOSE curFinishColumn; 
     
-    update tickets set tickets.order = finishOrder, tickets.status = finishColumn where tickets.id = ticket_id;
+    update tickets set tickets.order_number = finishOrder, tickets.status = finishColumn where tickets.id = ticket_id;
     commit;
 END$$
 delimiter ;
