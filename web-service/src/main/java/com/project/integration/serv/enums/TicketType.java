@@ -4,6 +4,8 @@ import java.util.stream.Stream;
 
 public enum TicketType {
   PROJECT("PROJECT"),
+  BUG("BUG"),
+  INFO("INFO"),
   TASK("TASK");
 
   private final String value;
