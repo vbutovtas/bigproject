@@ -1,31 +1,29 @@
 package com.project.integration.serv.dto;
 
-import com.project.integration.dao.entity.Employee;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.project.integration.serv.enums.TicketSeverity;
 import com.project.integration.serv.enums.TicketStatus;
 import com.project.integration.serv.enums.TicketType;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
-
 @Data
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TicketDto {
   Integer id;
-  EmployeeDto assignee; //TODO
-  EmployeeDto reporter; //TODO
-  TicketDto ticket; //TODO
+  EmployeeDto assignee;
+  EmployeeDto reporter;
+  TicketDto ticket;
   String name;
   String description;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
   LocalDateTime createDate;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
   LocalDateTime dueDate;
   Float estimatedTime;
   Float loggedTime;
@@ -34,8 +32,7 @@ public class TicketDto {
   TicketSeverity severity;
   String gitRef;
   Integer order;
-
-//  List<EmployeeDto> employees = new ArrayList<>(); //TODO
+  List<EmployeeDto> employees = new ArrayList<>();
 
   public TicketDto(Integer id, String name) {
     this.id = id;
