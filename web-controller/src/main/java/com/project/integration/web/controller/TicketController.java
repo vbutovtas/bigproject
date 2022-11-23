@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,6 +38,11 @@ public class TicketController {
     return new ResponseEntity<>(ticketDto, HttpStatus.OK);
   }
 
+  @GetMapping(value = "/all")
+  public ResponseEntity<List<TicketDto>> getProjects() {
+    return new ResponseEntity<>(ticketService.getProjects(), HttpStatus.OK);
+  }
+
   @PutMapping(value = "/tickets/{id}")
   public ResponseEntity<Void> updateTicket(@PathVariable("id") Integer id, @RequestBody TicketDto ticketDto) {
     ticketService.updateTicket(ticketDto, id);
@@ -52,8 +58,10 @@ public class TicketController {
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
-  @GetMapping(value = "/all")
-  public ResponseEntity<List<TicketDto>> getProjects() {
-    return new ResponseEntity<>(ticketService.getProjects(), HttpStatus.OK);
+  @PostMapping
+  public ResponseEntity<Void> createProject(@RequestBody TicketDto projectDto){
+    ticketService.createProject(projectDto);
+    return new ResponseEntity<>(HttpStatus.OK);
   }
+
 }

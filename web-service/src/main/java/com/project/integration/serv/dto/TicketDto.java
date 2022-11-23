@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.project.integration.serv.enums.TicketSeverity;
 import com.project.integration.serv.enums.TicketStatus;
 import com.project.integration.serv.enums.TicketType;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,10 +22,10 @@ public class TicketDto {
   TicketDto ticket;
   String name;
   String description;
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
   LocalDateTime createDate;
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-  LocalDateTime dueDate;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+  LocalDate dueDate;
   Float estimatedTime;
   Float loggedTime;
   TicketStatus status;

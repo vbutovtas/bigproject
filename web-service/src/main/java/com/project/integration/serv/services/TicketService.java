@@ -4,8 +4,10 @@ import com.project.integration.dao.entity.Employee;
 import com.project.integration.dao.entity.Ticket;
 import com.project.integration.dao.repos.TicketRepository;
 import com.project.integration.serv.dto.TicketDto;
+import com.project.integration.serv.enums.TicketSeverity;
 import com.project.integration.serv.enums.TicketStatus;
 import com.project.integration.serv.mapper.TicketMapper;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -88,11 +90,21 @@ public class TicketService {
     } else throw new RuntimeException("ticket does not exist"); //TODO
   }
 
+  public void createProject(TicketDto projectDto){
+    projectDto.setCreateDate(LocalDateTime.now());
+    projectDto.setStatus(TicketStatus.OPEN);
+    projectDto.setType(TicketType.PROJECT);
+    projectDto.setSeverity(TicketSeverity.NORMAL);
+    projectDto.setOrder(-1);
+    Ticket project = ticketMapper.convertToEntity(projectDto);
+    createOrUpdate(project);
+  }
+
   private void createOrUpdate(Ticket ticket) {
     try {
       ticketRepository.save(ticket);
     } catch (DataIntegrityViolationException e) {
-      throw new RuntimeException(""); // TODO
+      throw new RuntimeException(e); // TODO
     }
   }
 }
