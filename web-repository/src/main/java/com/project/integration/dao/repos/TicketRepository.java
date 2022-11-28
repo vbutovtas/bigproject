@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TicketRepository extends JpaRepository<Ticket, Integer> {
   List<Ticket> findByTicketOrderByOrder(Ticket project);
+
   List<Ticket> findByType(String type);
 
   Optional<Ticket> findByOrder(Integer order);
@@ -22,4 +23,6 @@ public interface TicketRepository extends JpaRepository<Ticket, Integer> {
       @Param("startColumn") String startColumn,
       @Param("finishOrder") Integer finishOrder,
       @Param("finishColumn") String finishColumn);
+
+  long countByStatusAndOrderGreaterThan(String status, Integer order);
 }

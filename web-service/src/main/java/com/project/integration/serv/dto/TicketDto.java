@@ -24,8 +24,8 @@ public class TicketDto {
   String description;
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
   LocalDateTime createDate;
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
-  LocalDate dueDate;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm")
+  LocalDateTime dueDate;
   Float estimatedTime;
   Float loggedTime;
   TicketStatus status;

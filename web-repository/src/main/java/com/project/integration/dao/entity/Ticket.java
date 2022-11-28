@@ -50,7 +50,7 @@ public class Ticket {
   LocalDateTime createDate;
 
   @Column(name = "due_date")
-  LocalDate dueDate;
+  LocalDateTime dueDate;
 
   @Column(name = "estimated_time")
   Float estimatedTime;

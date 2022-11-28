@@ -36,7 +36,11 @@ public class TicketMapper {
     TypeMap<TicketDto, Ticket> ticketToEntityMapper =
         this.modelMapper.createTypeMap(TicketDto.class, Ticket.class);
     Converter<TicketSeverity, Integer> severityToEntityConverter =
-        ctx -> ctx.getSource().getValue();
+        ctx -> {
+          System.out.println("1: " + ctx.getSource());
+          System.out.println("2: " + ctx.getSource().getValue());
+          return ctx.getSource().getValue();
+        };
     ticketToEntityMapper.addMappings(
         mapper -> mapper.using(severityToEntityConverter).map(TicketDto::getSeverity, Ticket::setSeverity));
   }

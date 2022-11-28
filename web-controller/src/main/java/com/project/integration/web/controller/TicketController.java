@@ -64,4 +64,9 @@ public class TicketController {
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
+  @PostMapping(value = "{id}/tickets")
+  public ResponseEntity<Void> createTicket(@PathVariable("id") Integer id, @RequestBody TicketDto ticketDto){
+    ticketService.createTicket(ticketDto, id);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
 }
