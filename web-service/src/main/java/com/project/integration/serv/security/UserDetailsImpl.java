@@ -46,13 +46,13 @@ public class UserDetailsImpl implements UserDetails {
 
   @Override
   public boolean isAccountNonExpired() {
-    return !UserStatus.DEACTIVATED.equals(status);
-  }//TODO catch exception when account is locked
+    return true;
+  }
 
   @Override
   public boolean isAccountNonLocked() {
     return !UserStatus.BLOCKED.equals(status);
-  }//TODO catch exception when account is locked
+  }
 
   @Override
   public boolean isCredentialsNonExpired() {
@@ -61,6 +61,6 @@ public class UserDetailsImpl implements UserDetails {
 
   @Override
   public boolean isEnabled() {
-    return UserStatus.ACTIVE.equals(status);
-  }//TODO catch exception when account is locked
+    return !UserStatus.BLOCKED.equals(status);
+  }
 }

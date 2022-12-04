@@ -29,7 +29,6 @@ public class UserService implements UserDetailsService {
   private final UserRepository userRepository;
   private final RoleRepository roleRepository;
   private final PasswordEncoder passwordEncoder;
-
   private final UserMapper userMapper;
 
   public UserService(
@@ -131,5 +130,9 @@ public class UserService implements UserDetailsService {
 
   public void blockUser(Integer id) {
     userRepository.blockUser(id);
+  }
+
+  public void changePassword(String login, String newPassword){
+    userRepository.changePassword(passwordEncoder.encode(newPassword), login);
   }
 }

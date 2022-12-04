@@ -3,6 +3,7 @@ package com.project.integration.serv.services;
 import com.project.integration.dao.entity.Order;
 import com.project.integration.dao.repos.OrderRepository;
 import com.project.integration.serv.dto.OrderDto;
+import java.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,7 @@ public class OrderService {
 
   public void create(OrderDto orderDto) {
     Order order = new Order(orderDto.getDescription());
+    order.setStartDate(LocalDate.now());
     order.setClient(userService.autoCreate(orderDto.getClient(), order));
     orderRepository.save(order);
   }
