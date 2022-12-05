@@ -85,4 +85,18 @@ public class User {
     this.phone = phone;
     this.status = status;
   }
+
+  public User(User user) {
+    this.id = user.getId();
+    this.role = user.getRole();
+    this.login = user.getLogin();
+    this.password = user.getPassword();
+    this.name = user.getName();
+    this.surname = user.getSurname();
+    this.email = user.getEmail();
+    this.phone = user.getPhone();
+    this.status = user.getStatus();
+    this.employee = user.getEmployee();
+    this.orders = user.getOrders();
+  }
 }

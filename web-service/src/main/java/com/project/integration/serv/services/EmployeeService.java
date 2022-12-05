@@ -13,6 +13,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,19 +24,23 @@ public class EmployeeService {
   private final RoleRepository roleRepository;
   private final UserService userService;
   private final EmployeeMapper employeeMapper;
+  private final PasswordEncoder passwordEncoder;
+  private final MailSender mailSender;
 
   @Autowired
   public EmployeeService(
-      EmployeeRepository employeeRepository,
-      UserRepository userRepository,
-      RoleRepository roleRepository,
-      UserService userService,
-      EmployeeMapper employeeMapper) {
+          EmployeeRepository employeeRepository,
+          UserRepository userRepository,
+          RoleRepository roleRepository,
+          UserService userService,
+          EmployeeMapper employeeMapper, PasswordEncoder passwordEncoder, MailSender mailSender) {
     this.employeeRepository = employeeRepository;
     this.userRepository = userRepository;
     this.roleRepository = roleRepository;
     this.userService = userService;
     this.employeeMapper = employeeMapper;
+    this.passwordEncoder = passwordEncoder;
+    this.mailSender = mailSender;
   }
 
   public List<EmployeeDto> findAll() {
@@ -60,6 +65,18 @@ public class EmployeeService {
       throw new IllegalArgumentException("All fields must be filled"); //TODO
     Employee employee = employeeMapper.convertToEntity(employeeDto);
     User user = userService.prepareUser(employeeDto.getUser(), employeeDto.getUser().getRole());
+    String message = String.format(
+            "Hello, %s! \n" +
+                    "Welcome to IT Manager Projects. Please, visit next link: http://localhost:3000/login\n" +
+                    "Your credentials: \n" +
+                    "Login: %s\n" +
+                    "Password: %s",
+            (user.getName() + " " + user.getSurname()),
+            user.getLogin(),
+            user.getPassword()
+    );
+    mailSender.send(user.getEmail(), "Welcome to IT Manager Projects", message);
+    user.setPassword(passwordEncoder.encode(user.getPassword()));
     if (Objects.nonNull(user.getId())) {
       throw new RuntimeException("Employee already exists"); // TODO
     }

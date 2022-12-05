@@ -71,28 +71,33 @@ public class UserService implements UserDetailsService {
   }
 
   public User autoCreate(UserDto userDto, Order order) {
-    User user = prepareUser(userDto, UserRoles.CUSTOMER);
+    User user = prepareUser(userDto, UserRoles.CUSTOMER), userWithOpenedPSWRD;
+    String password = user.getPassword();
     try {
+      user.setPassword(passwordEncoder.encode(user.getPassword()));
       userRepository.save(user);
       user.setOrders(Collections.singleton(order));
     } catch (Exception e) {
       throw new RuntimeException("Failed to create user: " + user, e);
     }
-    return user;
+    userWithOpenedPSWRD = new User(user);
+    userWithOpenedPSWRD.setPassword(password);
+    return userWithOpenedPSWRD;
   }
 
   public User prepareUser(UserDto userDto, UserRoles role) {
     if (Objects.isNull(userDto)) throw new NullPointerException("User value is empty: " + userDto);
     if (Objects.isNull(role)) throw new NullPointerException("Role value is empty: " + role);
     userDto.setLogin(createLogin(userDto.getName(), userDto.getSurname()));
-    if (Objects.nonNull(isExist(userDto))) {
+    User existUser = isExist(userDto);
+    if (Objects.nonNull(existUser)) {
       // TODO: log.info("User with login {} exists", userDto.getLogin());
-      return isExist(userDto);
+      return existUser;
     }
     userDto.setStatus(UserStatus.DEACTIVATED);
     User user = userMapper.convertToEntity(userDto);
     user.setRole(new Role(role.getValue()));
-    user.setPassword(passwordEncoder.encode(generateCommonLangPassword()));
+    user.setPassword((generateCommonLangPassword()));
     return user;
   }
 
