@@ -10,11 +10,6 @@ import com.project.integration.serv.enums.UserRoles;
 import com.project.integration.serv.enums.UserStatus;
 import com.project.integration.serv.mapper.UserMapper;
 import com.project.integration.serv.security.UserDetailsImpl;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.stream.Collectors;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -22,6 +17,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @ComponentScan("com.project.integration.serv")

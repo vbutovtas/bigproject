@@ -1,5 +1,6 @@
 package com.project.integration.web.formmodel;
 
+import com.project.integration.web.annotation.CheckFileExtension;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,5 +23,6 @@ public class OrderForm {
    @NotBlank
    String email;
    @NotNull
+   @CheckFileExtension()
    MultipartFile document;
 }
