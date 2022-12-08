@@ -3,6 +3,7 @@ package com.project.integration.dao.entity;
 import java.math.BigDecimal;
 import java.sql.Blob;
 import java.time.LocalDate;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,7 +24,6 @@ import lombok.experimental.FieldDefaults;
 @Getter
 @Setter
 @NoArgsConstructor
-@RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Order {
   @Id
@@ -33,21 +34,16 @@ public class Order {
   @JoinColumn(name = "client_id")
   User client;
 
-  @NonNull String name;
+  @OneToOne(cascade = CascadeType.ALL)
+  @JoinColumn(name = "project_id", referencedColumnName = "id")
+  Ticket project;
 
   @NonNull Blob description;
 
-  @Column(name = "start_date")
+  @Column(name = "create_date")
   LocalDate startDate;
 
   BigDecimal cost;
 
-  public Order(User client, @NonNull Blob description) {
-    this.client = client;
-    this.description = description;
-  }
-
-  public Order(@NonNull Blob description) {
-    this.description = description;
-  }
+  String status;
 }

@@ -1,6 +1,5 @@
 package com.project.integration.dao.entity;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -14,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -75,4 +75,7 @@ public class Ticket {
 
   @ManyToMany(mappedBy = "projects")
   Set<Employee> employees = new HashSet<>();
+
+  @OneToOne(mappedBy = "project")
+  Order clientOrder;
 }

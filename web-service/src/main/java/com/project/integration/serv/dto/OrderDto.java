@@ -1,12 +1,14 @@
 package com.project.integration.serv.dto;
 
+import com.project.integration.dao.entity.Ticket;
+import com.project.integration.serv.enums.OrderStatus;
 import java.math.BigDecimal;
-import java.sql.Blob;
 import java.time.LocalDate;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.apache.commons.lang3.ArrayUtils;
 
 @Data
 @NoArgsConstructor
@@ -14,13 +16,14 @@ import lombok.experimental.FieldDefaults;
 public class OrderDto {
   Integer id;
   UserDto client;
-  String name;
-  Blob description;
+  Ticket project;
+  Byte[] description;
   LocalDate startDate;
   BigDecimal cost;
+  OrderStatus status;
 
-  public OrderDto(UserDto client, Blob description) {
+  public OrderDto(UserDto client, byte[] description) {
     this.client = client;
-    this.description = description;
+    this.description = ArrayUtils.toObject(description);
   }
 }

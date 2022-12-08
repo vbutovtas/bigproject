@@ -2,7 +2,7 @@ package com.project.integration.serv.services;
 
 import com.project.integration.dao.entity.Ticket;
 import com.project.integration.dao.repos.TicketRepository;
-import com.project.integration.serv.Consts;
+import com.project.integration.serv.consts.Consts;
 import com.project.integration.serv.dto.TicketDto;
 import com.project.integration.serv.enums.TicketSeverity;
 import com.project.integration.serv.enums.TicketStatus;
@@ -23,10 +23,13 @@ public class TicketService {
   private final TicketRepository ticketRepository;
   private final TicketMapper ticketMapper;
 
+  private final OrderService orderService;
+
   @Autowired
-  public TicketService(TicketRepository ticketRepository, TicketMapper ticketMapper) {
+  public TicketService(TicketRepository ticketRepository, TicketMapper ticketMapper, OrderService orderService) {
     this.ticketRepository = ticketRepository;
     this.ticketMapper = ticketMapper;
+    this.orderService = orderService;
   }
 
   public List<TicketDto> getProjectTickets(Integer projectId) {
@@ -93,14 +96,15 @@ public class TicketService {
     } else throw new RuntimeException("ticket does not exist"); // TODO
   }
 
-  public void createProject(TicketDto projectDto) {
+  public void createProject(TicketDto projectDto, Integer orderId) {
     projectDto.setCreateDate(LocalDateTime.now());
     projectDto.setStatus(TicketStatus.OPEN);
     projectDto.setType(TicketType.PROJECT);
     projectDto.setSeverity(TicketSeverity.NORMAL);
     projectDto.setOrder(Consts.PROJECT_ORDER);
     Ticket project = ticketMapper.convertToEntity(projectDto);
-    createOrUpdate(project);
+    Integer projectId = createOrUpdate(project);
+    orderService.setProjectToOrder(projectId, orderId);
   }
 
   public void createTicket(TicketDto ticketDto, Integer projectId) {

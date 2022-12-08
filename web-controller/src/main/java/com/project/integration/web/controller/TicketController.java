@@ -58,9 +58,9 @@ public class TicketController {
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
-  @PostMapping
-  public ResponseEntity<Void> createProject(@RequestBody TicketDto projectDto){
-    ticketService.createProject(projectDto);
+  @PostMapping(value = "create/{id}")
+  public ResponseEntity<Void> createProject(@PathVariable("id") Integer id, @RequestBody TicketDto projectDto){
+    ticketService.createProject(projectDto, id);
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
