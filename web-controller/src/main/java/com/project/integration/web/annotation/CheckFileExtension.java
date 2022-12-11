@@ -11,7 +11,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(validatedBy = CheckFileExtensionValidator.class)
 public @interface CheckFileExtension {
-    String message() default "Неверное расширение файла.";
+    String message() default "Wrong file extension";
 
     Class<?>[] groups() default {};
 

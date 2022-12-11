@@ -5,7 +5,8 @@ import java.util.stream.Stream;
 public enum OrderStatus {
   OPEN("OPEN"),
   IS_PROCESSED("IS_PROCESSED"),
-  DONE("DONE");
+  DONE("DONE"),
+  BLOCKED("BLOCKED");
   private final String value;
 
   OrderStatus(String value) {

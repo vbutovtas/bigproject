@@ -17,6 +17,13 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
 
   @Transactional
   @Modifying
-  @Query(value="update orders set orders.project_id=?1 where orders.id=?2", nativeQuery = true)
+  @Query(value = "update orders set orders.project_id=?1 where orders.id=?2", nativeQuery = true)
   void setProject(Integer projectId, Integer orderId);
+
+  @Transactional
+  @Modifying
+  @Query(value = "update orders set orders.status='BLOCKED' where orders.id=?1", nativeQuery = true)
+  void blockOrder(Integer id);
+
+  List<Order> findByStatusNot(String status);
 }

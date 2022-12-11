@@ -6,6 +6,8 @@ import com.project.integration.dao.repos.EmployeeRepository;
 import com.project.integration.dao.repos.RoleRepository;
 import com.project.integration.dao.repos.UserRepository;
 import com.project.integration.serv.dto.EmployeeDto;
+import com.project.integration.serv.enums.UserStatus;
+import com.project.integration.serv.exception.ServiceException;
 import com.project.integration.serv.mapper.EmployeeMapper;
 import java.util.List;
 import java.util.Objects;
@@ -29,11 +31,13 @@ public class EmployeeService {
 
   @Autowired
   public EmployeeService(
-          EmployeeRepository employeeRepository,
-          UserRepository userRepository,
-          RoleRepository roleRepository,
-          UserService userService,
-          EmployeeMapper employeeMapper, PasswordEncoder passwordEncoder, MailSender mailSender) {
+      EmployeeRepository employeeRepository,
+      UserRepository userRepository,
+      RoleRepository roleRepository,
+      UserService userService,
+      EmployeeMapper employeeMapper,
+      PasswordEncoder passwordEncoder,
+      MailSender mailSender) {
     this.employeeRepository = employeeRepository;
     this.userRepository = userRepository;
     this.roleRepository = roleRepository;
@@ -44,7 +48,8 @@ public class EmployeeService {
   }
 
   public List<EmployeeDto> findAll() {
-    List<Employee> employees = employeeRepository.findAll();
+    List<Employee> employees =
+        employeeRepository.findByUserStatusNot(UserStatus.BLOCKED.getValue());
     return employeeMapper.convertToDto(employees);
   }
 
@@ -62,23 +67,21 @@ public class EmployeeService {
         || Objects.isNull(employeeDto.getUser().getRole())
         || Objects.isNull(employeeDto.getPosition())
         || Objects.isNull(employeeDto.getStartDate()))
-      throw new IllegalArgumentException("All fields must be filled"); //TODO
+      throw new IllegalArgumentException("All fields must be filled"); // TODO
     Employee employee = employeeMapper.convertToEntity(employeeDto);
     User user = userService.prepareUser(employeeDto.getUser(), employeeDto.getUser().getRole());
-    String message = String.format(
-            "Hello, %s! \n" +
-                    "Welcome to IT Manager Projects. Please, visit next link: http://localhost:3000/login\n" +
-                    "Your credentials: \n" +
-                    "Login: %s\n" +
-                    "Password: %s",
-            (user.getName() + " " + user.getSurname()),
-            user.getLogin(),
-            user.getPassword()
-    );
+    String message =
+        String.format(
+            "Hello, %s! \n"
+                + "Welcome to IT Manager Projects. Please, visit next link: http://localhost:3000/login\n"
+                + "Your credentials: \n"
+                + "Login: %s\n"
+                + "Password: %s",
+            (user.getName() + " " + user.getSurname()), user.getLogin(), user.getPassword());
     mailSender.send(user.getEmail(), "Welcome to IT Manager Projects", message);
     user.setPassword(passwordEncoder.encode(user.getPassword()));
     if (Objects.nonNull(user.getId())) {
-      throw new RuntimeException("Employee already exists"); // TODO
+      throw new ServiceException("Login already exists");
     }
     employee.setUser(user);
     createOrUpdate(employee);

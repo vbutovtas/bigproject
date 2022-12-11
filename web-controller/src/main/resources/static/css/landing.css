@@ -1766,6 +1766,9 @@ footer .item.social {
 }
 .invalid-feedback{
   color: red;
+  width: fit-content;
+  background: white;
+  padding: 1px;
 }
 :root {
 	--hue: 223;

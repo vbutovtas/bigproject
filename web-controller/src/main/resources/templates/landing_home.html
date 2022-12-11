@@ -231,7 +231,7 @@
                 <h6 th:if="${#fields.hasErrors('email')}" th:errors="*{email}"
                     class="invalid-feedback"></h6>
                 <div class="custom-file">
-                    <label class="custom-file-label" for="file">Select file:</label>
+                    <label class="custom-file-label" for="file">Select file (.doc/.docx):</label>
                     <input class="custom-file-input" th:field="*{document}" type="file" id="file" name="file"/>
                     <h6 th:if="${#fields.hasErrors('document')}" th:errors="*{document}"
                         class="invalid-feedback"></h6>

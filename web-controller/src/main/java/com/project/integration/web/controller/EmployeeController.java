@@ -3,6 +3,7 @@ package com.project.integration.web.controller;
 import com.project.integration.serv.dto.EmployeeDto;
 import com.project.integration.serv.services.EmployeeService;
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +44,7 @@ public class EmployeeController {
   }
 
   @PostMapping(value = "/new")
-  public ResponseEntity<Void> create(@RequestBody EmployeeDto employeeDto){
+  public ResponseEntity<Void> create(@RequestBody @Valid EmployeeDto employeeDto){
     employeeService.create(employeeDto);
     return new ResponseEntity<>(HttpStatus.OK);
   }

@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -27,10 +28,17 @@ public class UserController {
     this.authenticationManager = authenticationManager;
   }
 
-  @PostMapping
-  public ResponseEntity<Void> create(@RequestBody UserDto userDto) {
-    userService.create(userDto);
-    return new ResponseEntity<>(HttpStatus.OK);
+  // Is being used anywhere?
+//  @PostMapping
+//  public ResponseEntity<Void> create(@RequestBody UserDto userDto) {
+//    userService.create(userDto);
+//    return new ResponseEntity<>(HttpStatus.OK);
+//  }
+
+  @GetMapping(value = "/{id}")
+  public ResponseEntity<UserDto> findUserById(@PathVariable("id") Integer id){
+    UserDto userDto = userService.findUserById(id);
+    return new ResponseEntity<>(userDto, HttpStatus.OK);
   }
 
   @PutMapping(value = "/{id}/block")
@@ -39,8 +47,14 @@ public class UserController {
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
+  @PutMapping(value = "/{id}/deactivate")
+  public ResponseEntity<Void> deactivateUser(@PathVariable("id") Integer id) {
+    userService.deactivateUser(id);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
   @PostMapping(value = "/password")
-  public ResponseEntity<Void> blockUser(@RequestBody ChangePswdRequest changePswdRequest) {
+  public ResponseEntity<Void> changePassword(@RequestBody ChangePswdRequest changePswdRequest) {
     authenticationManager.authenticate(
         new UsernamePasswordAuthenticationToken(
             changePswdRequest.getLogin(), changePswdRequest.getCurrentPassword()));

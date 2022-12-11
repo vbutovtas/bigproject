@@ -9,7 +9,7 @@ import com.project.integration.serv.enums.UserStatus;
 import com.project.integration.serv.mapper.OrderMapper;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Service;
@@ -55,18 +55,32 @@ public class OrderService {
   }
 
   public List<OrderDto> findAll() {
-    List<Order> orders = orderRepository.findAll();
-    return orderMapper.convertToDto(orders);
+    List<Order> orders = orderRepository.findByStatusNot(OrderStatus.BLOCKED.getValue());
+    List<OrderDto> orderDtos = orderMapper.convertToDto(orders);
+    orderDtos.forEach(order -> order.setDescription(null));
+    return orderDtos;
   }
 
   public List<OrderDto> findByClientId(Integer id) {
     User client = new User();
     client.setId(id);
     List<Order> orders = orderRepository.findByClient(client);
-    return orderMapper.convertToDto(orders);
+    List<OrderDto> orderDtos = orderMapper.convertToDto(orders);
+    orderDtos.forEach(order -> order.setDescription(null));
+    return orderDtos;
   }
 
-  public void setProjectToOrder(Integer projectId, Integer orderId){
+  public OrderDto findById(Integer id) {
+    Optional<Order> order = orderRepository.findById(id);
+    if (order.isPresent()) return orderMapper.convertToDto(order.get());
+    else throw new RuntimeException("order does not exist");
+  }
+
+  public void setProjectToOrder(Integer projectId, Integer orderId) {
     orderRepository.setProject(projectId, orderId);
+  }
+
+  public void blockOrder(Integer id){
+    orderRepository.blockOrder(id);
   }
 }

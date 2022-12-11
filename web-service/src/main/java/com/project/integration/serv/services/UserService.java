@@ -6,23 +6,23 @@ import com.project.integration.dao.entity.User;
 import com.project.integration.dao.repos.RoleRepository;
 import com.project.integration.dao.repos.UserRepository;
 import com.project.integration.serv.dto.UserDto;
+import com.project.integration.serv.enums.OrderStatus;
 import com.project.integration.serv.enums.UserRoles;
 import com.project.integration.serv.enums.UserStatus;
+import com.project.integration.serv.exception.ServiceException;
 import com.project.integration.serv.mapper.UserMapper;
 import com.project.integration.serv.security.UserDetailsImpl;
-import org.apache.commons.lang3.RandomStringUtils;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import org.apache.commons.lang3.RandomStringUtils;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
 @Service
 @ComponentScan("com.project.integration.serv")
@@ -31,45 +31,53 @@ public class UserService implements UserDetailsService {
   private final RoleRepository roleRepository;
   private final PasswordEncoder passwordEncoder;
   private final UserMapper userMapper;
+  private final MailSender mailSender;
 
   public UserService(
       UserRepository userRepository,
       RoleRepository roleRepository,
       PasswordEncoder passwordEncoder,
-      UserMapper userMapper) {
+      UserMapper userMapper,
+      MailSender mailSender) {
     this.userRepository = userRepository;
     this.roleRepository = roleRepository;
     this.passwordEncoder = passwordEncoder;
     this.userMapper = userMapper;
+    this.mailSender = mailSender;
   }
 
   @Override
   public UserDetails loadUserByUsername(String login) {
     Optional<User> user = userRepository.findByLogin(login);
     if (user.isPresent()) return UserDetailsImpl.fromUserEntityToUserDetails(user.get());
-    else throw new RuntimeException("user not found"); // TODO
+    else throw new ServiceException("User not found");
   }
 
-  public void create(UserDto userDto) {
-    Optional<Role> role = roleRepository.findByName(userDto.getRole().name());
-    if (role.isEmpty()) throw new RuntimeException("role does not exist"); // TODO
-    // TODO user status - enum as request param how
-    User user =
-        new User(
-            role.get(),
-            userDto.getLogin(),
-            passwordEncoder.encode(userDto.getPassword()),
-            userDto.getName(),
-            userDto.getSurname(),
-            userDto.getEmail(),
-            userDto.getPhone(),
-            userDto.getStatus().getValue());
-    try {
-      userRepository.save(user);
-    } catch (DataIntegrityViolationException e) {
-      throw new RuntimeException("user exists"); // TODO
-    }
+  public UserDto findUserById(Integer id) {
+    Optional<User> user = userRepository.findById(id);
+    if (user.isPresent()) return userMapper.convertToDto(user.get());
+    else throw new ServiceException("User not found");
   }
+
+  //  public void create(UserDto userDto) {
+  //    Optional<Role> role = roleRepository.findByName(userDto.getRole().name());
+  //    if (role.isEmpty()) throw new RuntimeException("role does not exist"); // TODO
+  //    User user =
+  //        new User(
+  //            role.get(),
+  //            userDto.getLogin(),
+  //            passwordEncoder.encode(userDto.getPassword()),
+  //            userDto.getName(),
+  //            userDto.getSurname(),
+  //            userDto.getEmail(),
+  //            userDto.getPhone(),
+  //            userDto.getStatus().getValue());
+  //    try {
+  //      userRepository.save(user);
+  //    } catch (DataIntegrityViolationException e) {
+  //      throw new ServiceException("Login already exists", e);
+  //    }
+  //  }
 
   public User autoCreate(UserDto userDto, Order order) {
     User user = prepareUser(userDto, UserRoles.CUSTOMER), userWithOpenedPSWRD;
@@ -79,7 +87,7 @@ public class UserService implements UserDetailsService {
       userRepository.save(user);
       user.setOrders(Collections.singleton(order));
     } catch (Exception e) {
-      throw new RuntimeException("Failed to create user: " + user, e);
+      throw new ServiceException("Failed to create user: " + user, e);
     }
     userWithOpenedPSWRD = new User(user);
     userWithOpenedPSWRD.setPassword(password);
@@ -129,16 +137,40 @@ public class UserService implements UserDetailsService {
   }
 
   public String createLogin(String firstName, String lastName) {
-    if (firstName.length() < 4 || lastName.length() < 4)
-      throw new IllegalArgumentException("Length of firstName/lastName is less than 4");
-    return firstName.substring(0, 3).toLowerCase() + lastName.substring(0, 3).toLowerCase();
+    if (firstName.length() > 10) firstName = firstName.substring(0, 10);
+    if (lastName.length() > 10) lastName = lastName.substring(0, 10);
+    return firstName.toLowerCase() + "_" + lastName.toLowerCase();
   }
 
   public void blockUser(Integer id) {
-    userRepository.blockUser(id);
+    Optional<User> user = userRepository.findById(id);
+    if (user.isPresent()) {
+      if (user.get().getRole().getId().equals(UserRoles.CUSTOMER.getValue())) {
+        for (Order order : user.get().getOrders()) order.setStatus(OrderStatus.BLOCKED.getValue());
+      }
+      user.get().setStatus(UserStatus.BLOCKED.getValue());
+      userRepository.save(user.get());
+    } else throw new ServiceException("User not found");
   }
 
-  public void changePassword(String login, String newPassword){
+  public void deactivateUser(Integer id) {
+    Optional<User> user = userRepository.findById(id);
+    if (user.isPresent()) {
+      String newPassword = generateCommonLangPassword();
+      String message =
+          String.format(
+              "Hello, %s! \n"
+                  + "Your account was deactivated. To activate it back, log in and change password."
+                  + "Your new temporary Password: %s",
+              (user.get().getName() + " " + user.get().getSurname()), newPassword);
+      user.get().setPassword(passwordEncoder.encode(newPassword));
+      user.get().setStatus(UserStatus.DEACTIVATED.getValue());
+      userRepository.save(user.get());
+      mailSender.send(user.get().getEmail(), "IT Manager Projects", message);
+    }
+  }
+
+  public void changePassword(String login, String newPassword) {
     userRepository.changePassword(passwordEncoder.encode(newPassword), login);
   }
 }
