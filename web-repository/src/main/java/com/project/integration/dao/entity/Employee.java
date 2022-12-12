@@ -50,11 +50,7 @@ public class Employee implements Serializable {
   @OneToMany(mappedBy = "employee", cascade = CascadeType.ALL)
   Set<Comment> comments = new HashSet<>();
 
-  @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-  @JoinTable(
-      name = "projects_has_employees",
-      joinColumns = @JoinColumn(name = "employees_id"),
-      inverseJoinColumns = @JoinColumn(name = "tickets_id"))
+  @ManyToMany(mappedBy = "employees")
   Set<Ticket> projects = new HashSet<>();
 
   public Employee(Integer id, User user, LocalDate birthDate, String position,

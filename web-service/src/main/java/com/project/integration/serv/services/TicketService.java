@@ -7,6 +7,7 @@ import com.project.integration.serv.dto.TicketDto;
 import com.project.integration.serv.enums.TicketSeverity;
 import com.project.integration.serv.enums.TicketStatus;
 import com.project.integration.serv.enums.TicketType;
+import com.project.integration.serv.exception.ServiceException;
 import com.project.integration.serv.mapper.TicketMapper;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -59,7 +60,7 @@ public class TicketService {
 
   private void prepareTicketForUpdate(Ticket ticket) {
     Optional<Ticket> initialTicket = ticketRepository.findById(ticket.getId());
-    if (initialTicket.isEmpty()) throw new RuntimeException("Ticket not found"); // TODO
+    if (initialTicket.isEmpty()) throw new ServiceException("Ticket (project) not found");
     if (Objects.isNull(ticket.getAssignee())) ticket.setAssignee(initialTicket.get().getAssignee());
     if (Objects.isNull(ticket.getReporter())) ticket.setReporter(initialTicket.get().getReporter());
     if (Objects.isNull(ticket.getTicket())) ticket.setTicket(initialTicket.get().getTicket());
