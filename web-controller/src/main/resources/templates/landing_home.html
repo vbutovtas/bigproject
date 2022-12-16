@@ -232,7 +232,9 @@
                     class="invalid-feedback"></h6>
                 <div class="custom-file">
                     <label class="custom-file-label" for="file">Select file (.doc/.docx):</label>
-                    <input class="custom-file-input" th:field="*{document}" type="file" id="file" name="file"/>
+                    <input class="custom-file-input" th:field="*{document}" type="file" id="file" name="file"
+                           accept="application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                           onchange="validate()"/>
                     <h6 th:if="${#fields.hasErrors('document')}" th:errors="*{document}"
                         class="invalid-feedback"></h6>
                 </div>
@@ -268,6 +270,18 @@
     </div>
 </footer>
 </body>
+<script>
+    function validate() {
+      var fileName = document.getElementById("file").value;
+      var dot = fileName.lastIndexOf(".") + 1;
+      var extFile = fileName.substr(dot, fileName.length).toLowerCase();
+      if (extFile == "doc" || extFile == "docx") {
+      } else {
+       alert("Only .doc and .docx files are allowed!");
+       document.getElementById("file").value = "";
+      }
+   }
+</script>
 <!-- partial -->
 <script th:if="${isShowed}">
    window.onload = () => {$('#submitModal').modal('show');}

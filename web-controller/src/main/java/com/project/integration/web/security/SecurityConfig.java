@@ -7,6 +7,7 @@ import com.project.integration.web.security.jwt.JwtFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -56,8 +57,26 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
   protected void configure(HttpSecurity http) throws Exception {
     http.cors().and().httpBasic().disable().csrf().disable();
 
-    // TODO
-    http.authorizeRequests().anyRequest().permitAll().and();
+    http.authorizeRequests()
+        .antMatchers("/", "/create_request", "/auth")
+        .permitAll()
+
+        .antMatchers("/employee/new","/orders/{\\d+}/block", "/user/{\\d+}/block", "/user/{\\d+}/deactivate")
+        .hasRole("ADMIN")
+
+        .antMatchers( "/orders/all", "/orders/{\\d+}/description", "/project/create/{\\d+}")
+        .hasAnyRole("ADMIN", "MANAGER")
+
+        .antMatchers(HttpMethod.PUT, "/project/tickets/{\\d+}")
+        .hasAnyRole("ADMIN", "MANAGER", "EMPLOYEE")
+        .antMatchers(HttpMethod.POST, "/project/{\\d+}/tickets")
+        .hasAnyRole("ADMIN", "MANAGER", "EMPLOYEE")
+        .antMatchers("/project/reorder")
+        .hasAnyRole("ADMIN", "MANAGER", "EMPLOYEE")
+
+        .anyRequest()
+        .authenticated()
+        .and();
 
     http.exceptionHandling()
         .authenticationEntryPoint(unauthorizedHandler)

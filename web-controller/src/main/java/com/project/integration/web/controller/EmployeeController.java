@@ -31,20 +31,27 @@ public class EmployeeController {
     return new ResponseEntity<>(employeeDto, HttpStatus.OK);
   }
 
+  @GetMapping(value = "/user/{id}")
+  public ResponseEntity<EmployeeDto> findByUserId(@PathVariable("id") Integer userId) {
+    EmployeeDto employeeDto = employeeService.findByUserId(userId);
+    return new ResponseEntity<>(employeeDto, HttpStatus.OK);
+  }
+
   @PutMapping(value = "/{id}")
-  public ResponseEntity<Void> update(@RequestBody EmployeeDto employeeDto, @PathVariable("id") Integer id){
+  public ResponseEntity<Void> update(
+      @RequestBody @Valid EmployeeDto employeeDto, @PathVariable("id") Integer id) {
     employeeService.update(employeeDto, id);
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
   @GetMapping(value = "/all")
-  public ResponseEntity<List<EmployeeDto>> findAll(){
+  public ResponseEntity<List<EmployeeDto>> findAll() {
     List<EmployeeDto> employeeDtos = employeeService.findAll();
     return new ResponseEntity<>(employeeDtos, HttpStatus.OK);
   }
 
   @PostMapping(value = "/new")
-  public ResponseEntity<Void> create(@RequestBody @Valid EmployeeDto employeeDto){
+  public ResponseEntity<Void> create(@RequestBody @Valid EmployeeDto employeeDto) {
     employeeService.create(employeeDto);
     return new ResponseEntity<>(HttpStatus.OK);
   }

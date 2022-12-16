@@ -9,6 +9,8 @@ public interface Attributes {
   String EXCEPTION  = "exception";
   String ROLE  = "role";
   String STATUS  = "status";
+
+  String ID  = "id";
   String CLAIMS  = "claims";
   String AUTHORIZATION  = "Authorization";
   String TOKEN_BEGINNING_IN_HEADER  = "Bearer ";

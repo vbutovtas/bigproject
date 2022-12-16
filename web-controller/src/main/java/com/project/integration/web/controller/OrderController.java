@@ -2,6 +2,7 @@ package com.project.integration.web.controller;
 
 import com.project.integration.serv.dto.EmployeeDto;
 import com.project.integration.serv.dto.OrderDto;
+import com.project.integration.serv.dto.TicketDto;
 import com.project.integration.serv.services.OrderService;
 import java.util.List;
 import org.apache.commons.lang3.ArrayUtils;
@@ -37,6 +38,12 @@ public class OrderController {
   public ResponseEntity<Void> blockOrder(@PathVariable("id") Integer id) {
     orderService.blockOrder(id);
     return new ResponseEntity<>(HttpStatus.OK);
+  }
+
+  @GetMapping(value = "/{id}/project")
+  public ResponseEntity<OrderDto> getClientCurrentProjectId(@PathVariable("id") Integer clientId) {
+    OrderDto clientProject = orderService.getClientCurrentProjectId(clientId);
+    return new ResponseEntity<>(clientProject, HttpStatus.OK);
   }
 
   @GetMapping(

@@ -9,10 +9,10 @@ select * from tickets order by tickets.status, tickets.order_number;
 select * from projects_has_employees;
 
 
-insert into roles values(default, 'ADMIN');
-insert into roles values(default, 'MANAGER');
-insert into roles values(default, 'EMPLOYEE');
-insert into roles values(default, 'CUSTOMER');
+insert into roles values(default, 'ROLE_ADMIN');
+insert into roles values(default, 'ROLE_MANAGER');
+insert into roles values(default, 'ROLE_EMPLOYEE');
+insert into roles values(default, 'ROLE_CUSTOMER');
 
 insert into users values (default, 3, 'user1', '$2a$10$r22vvkcw0qIeChQSlKRObOCjZjTuEVb20DXE8oAgc7dUE7WePEiaC', 'name1', 'surname1', 'email1', 'phone1', 'ACTIVE');
 insert into users values (default, 3, 'user2', '$2a$10$r22vvkcw0qIeChQSlKRObOCjZjTuEVb20DXE8oAgc7dUE7WePEiaC', 'name2', 'surname2', 'email2', 'phone2', 'ACTIVE');

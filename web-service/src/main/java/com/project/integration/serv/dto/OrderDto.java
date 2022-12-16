@@ -16,7 +16,7 @@ import org.apache.commons.lang3.ArrayUtils;
 public class OrderDto {
   Integer id;
   UserDto client;
-  Ticket project;
+  TicketDto project;
   Byte[] description;
   LocalDate startDate;
   BigDecimal cost;

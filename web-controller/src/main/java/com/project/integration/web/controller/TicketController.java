@@ -4,6 +4,7 @@ import com.project.integration.serv.dto.TicketDto;
 import com.project.integration.serv.enums.TicketStatus;
 import com.project.integration.serv.services.TicketService;
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,7 +45,7 @@ public class TicketController {
   }
 
   @PutMapping(value = "/tickets/{id}")
-  public ResponseEntity<Void> updateTicket(@PathVariable("id") Integer id, @RequestBody TicketDto ticketDto) {
+  public ResponseEntity<Void> updateTicket(@PathVariable("id") Integer id, @RequestBody @Valid TicketDto ticketDto) {
     ticketService.updateTicket(ticketDto, id);
     return new ResponseEntity<>(HttpStatus.OK);
   }
@@ -58,14 +59,14 @@ public class TicketController {
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
-  @PostMapping(value = "create/{id}")
-  public ResponseEntity<Void> createProject(@PathVariable("id") Integer id, @RequestBody TicketDto projectDto){
+  @PostMapping(value = "/create/{id}")
+  public ResponseEntity<Void> createProject(@PathVariable("id") Integer id, @RequestBody @Valid TicketDto projectDto){
     ticketService.createProject(projectDto, id);
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
-  @PostMapping(value = "{id}/tickets")
-  public ResponseEntity<Void> createTicket(@PathVariable("id") Integer id, @RequestBody TicketDto ticketDto){
+  @PostMapping(value = "/{id}/tickets")
+  public ResponseEntity<Void> createTicket(@PathVariable("id") Integer id, @RequestBody @Valid TicketDto ticketDto){
     ticketService.createTicket(ticketDto, id);
     return new ResponseEntity<>(HttpStatus.OK);
   }

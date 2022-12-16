@@ -31,6 +31,6 @@ public class EmployeeDto {
 
   String experience;
   String photo;
-  TicketDto currentProject; // TODO
+  TicketDto currentProject;
   int projectsCount;
 }

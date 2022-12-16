@@ -3,10 +3,10 @@ package com.project.integration.serv.enums;
 import java.util.stream.Stream;
 
 public enum UserRoles {
-  ADMIN(1),
-  MANAGER(2),
-  EMPLOYEE(3),
-  CUSTOMER(4);
+  ROLE_ADMIN(1),
+  ROLE_MANAGER(2),
+  ROLE_EMPLOYEE(3),
+  ROLE_CUSTOMER(4);
 
   private final int value;
 

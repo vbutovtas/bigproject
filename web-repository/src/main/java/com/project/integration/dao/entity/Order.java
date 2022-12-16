@@ -34,7 +34,7 @@ public class Order {
   @JoinColumn(name = "client_id")
   User client;
 
-  @OneToOne(cascade = CascadeType.ALL)
+  @OneToOne
   @JoinColumn(name = "project_id", referencedColumnName = "id")
   Ticket project;
 

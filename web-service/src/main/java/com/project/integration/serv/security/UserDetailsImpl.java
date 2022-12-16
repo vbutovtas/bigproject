@@ -11,6 +11,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @AllArgsConstructor
 public class UserDetailsImpl implements UserDetails {
+
+  private Integer id;
   private String login;
   private String password;
   private Collection<? extends GrantedAuthority> grantedAuthorities;
@@ -19,10 +21,15 @@ public class UserDetailsImpl implements UserDetails {
 
   public static UserDetails fromUserEntityToUserDetails(User userEntity) {
     return new UserDetailsImpl(
+        userEntity.getId(),
         userEntity.getLogin(),
         userEntity.getPassword(),
         Collections.singletonList(new SimpleGrantedAuthority(userEntity.getRole().getName())),
         UserStatus.getEnumByValue(userEntity.getStatus()));
+  }
+
+  public Integer getId() {
+    return id;
   }
 
   public UserStatus getStatus() {

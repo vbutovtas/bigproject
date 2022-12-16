@@ -4,6 +4,7 @@ import static com.project.integration.serv.mapper.Utils.convertList;
 
 import com.project.integration.dao.entity.Order;
 import com.project.integration.serv.dto.OrderDto;
+import com.project.integration.serv.exception.ServiceException;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.List;
@@ -40,7 +41,7 @@ public class OrderMapper {
               byte[] description = ctx.getSource().getBytes(1, (int) ctx.getSource().length());
               descriptionAsBytes = ArrayUtils.toObject(description);
             } catch (SQLException e) {
-              throw new RuntimeException(e); // TODO
+              throw new ServiceException(e.getMessage());
             }
           }
           return descriptionAsBytes;
@@ -54,7 +55,7 @@ public class OrderMapper {
               Byte[] descriptionAsBytes = ctx.getSource();
               descriptionBlob = new SerialBlob(ArrayUtils.toPrimitive(descriptionAsBytes));
             } catch (SQLException e) {
-              throw new RuntimeException(e);
+              throw new ServiceException(e.getMessage());
             }
           }
           return descriptionBlob;

@@ -3,7 +3,6 @@ package com.project.integration.serv.services;
 import com.project.integration.dao.entity.Order;
 import com.project.integration.dao.entity.Role;
 import com.project.integration.dao.entity.User;
-import com.project.integration.dao.repos.RoleRepository;
 import com.project.integration.dao.repos.UserRepository;
 import com.project.integration.serv.dto.UserDto;
 import com.project.integration.serv.enums.OrderStatus;
@@ -19,6 +18,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,19 +28,16 @@ import org.springframework.stereotype.Service;
 @ComponentScan("com.project.integration.serv")
 public class UserService implements UserDetailsService {
   private final UserRepository userRepository;
-  private final RoleRepository roleRepository;
   private final PasswordEncoder passwordEncoder;
   private final UserMapper userMapper;
   private final MailSender mailSender;
 
   public UserService(
       UserRepository userRepository,
-      RoleRepository roleRepository,
       PasswordEncoder passwordEncoder,
       UserMapper userMapper,
       MailSender mailSender) {
     this.userRepository = userRepository;
-    this.roleRepository = roleRepository;
     this.passwordEncoder = passwordEncoder;
     this.userMapper = userMapper;
     this.mailSender = mailSender;
@@ -59,28 +56,30 @@ public class UserService implements UserDetailsService {
     else throw new ServiceException("User not found");
   }
 
-  //  public void create(UserDto userDto) {
-  //    Optional<Role> role = roleRepository.findByName(userDto.getRole().name());
-  //    if (role.isEmpty()) throw new RuntimeException("role does not exist"); // TODO
-  //    User user =
-  //        new User(
-  //            role.get(),
-  //            userDto.getLogin(),
-  //            passwordEncoder.encode(userDto.getPassword()),
-  //            userDto.getName(),
-  //            userDto.getSurname(),
-  //            userDto.getEmail(),
-  //            userDto.getPhone(),
-  //            userDto.getStatus().getValue());
-  //    try {
-  //      userRepository.save(user);
-  //    } catch (DataIntegrityViolationException e) {
-  //      throw new ServiceException("Login already exists", e);
-  //    }
-  //  }
+  public void update(UserDto userDto, Integer id) {
+    userDto.setId(id);
+    User user = userMapper.convertToEntity(userDto);
+    prepareUserForUpdate(user, id);
+    try {
+      userRepository.save(user);
+    } catch (DataIntegrityViolationException e) {
+      throw new ServiceException("Login already exists");
+    }
+  }
+
+  public void prepareUserForUpdate(User user, Integer id) {
+    Optional<User> initUser = userRepository.findById(id);
+    if (initUser.isEmpty()) throw new ServiceException("User not found");
+    if (Objects.isNull(user.getId())) user.setId(initUser.get().getId());
+    if (Objects.isNull(user.getRole())) user.setRole(initUser.get().getRole());
+    if (Objects.isNull(user.getLogin())) user.setLogin(initUser.get().getLogin());
+    if (Objects.isNull(user.getPassword())) user.setPassword(initUser.get().getPassword());
+    if (Objects.isNull(user.getStatus())) user.setStatus(initUser.get().getStatus());
+    if (Objects.isNull(user.getOrders())) user.setOrders(initUser.get().getOrders());
+  }
 
   public User autoCreate(UserDto userDto, Order order) {
-    User user = prepareUser(userDto, UserRoles.CUSTOMER), userWithOpenedPSWRD;
+    User user = prepareUser(userDto, UserRoles.ROLE_CUSTOMER), userWithOpenedPSWRD;
     String password = user.getPassword();
     try {
       user.setPassword(passwordEncoder.encode(user.getPassword()));
@@ -100,7 +99,6 @@ public class UserService implements UserDetailsService {
     userDto.setLogin(createLogin(userDto.getName(), userDto.getSurname()));
     User existUser = isExist(userDto);
     if (Objects.nonNull(existUser)) {
-      // TODO: log.info("User with login {} exists", userDto.getLogin());
       return existUser;
     }
     userDto.setStatus(UserStatus.DEACTIVATED);
@@ -145,7 +143,7 @@ public class UserService implements UserDetailsService {
   public void blockUser(Integer id) {
     Optional<User> user = userRepository.findById(id);
     if (user.isPresent()) {
-      if (user.get().getRole().getId().equals(UserRoles.CUSTOMER.getValue())) {
+      if (user.get().getRole().getId().equals(UserRoles.ROLE_CUSTOMER.getValue())) {
         for (Order order : user.get().getOrders()) order.setStatus(OrderStatus.BLOCKED.getValue());
       }
       user.get().setStatus(UserStatus.BLOCKED.getValue());

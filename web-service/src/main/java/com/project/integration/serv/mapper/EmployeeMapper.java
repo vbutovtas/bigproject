@@ -9,12 +9,14 @@ import com.project.integration.serv.dto.EmployeeDto;
 import com.project.integration.serv.dto.TicketDto;
 import com.project.integration.serv.enums.TicketStatus;
 import com.project.integration.serv.enums.TicketType;
+import com.project.integration.serv.exception.ServiceException;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.temporal.ChronoUnit;
 import java.util.Base64;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -50,7 +52,7 @@ public class EmployeeMapper {
               return Base64.getEncoder().encodeToString(photoAsBytes);
             } else return "";
           } catch (Exception e) {
-            throw new RuntimeException(e); // TODO
+            throw new ServiceException(e.getMessage());
           }
         };
 
@@ -92,7 +94,7 @@ public class EmployeeMapper {
                 ticket ->
                     ticket.getType().equals(TicketType.PROJECT.getValue())
                         && !ticket.getStatus().equals(TicketStatus.CLOSE.getValue()))
-            .findFirst();
+            .min(Comparator.comparing(Ticket::getId));
     EmployeeDto employeeDto = modelMapper.map(employee, EmployeeDto.class);
     if (currentProject.isPresent()) {
       TicketDto currentProjectDto = modelMapper.map(currentProject.get(), TicketDto.class);

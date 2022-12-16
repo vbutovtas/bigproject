@@ -5,6 +5,7 @@ import static com.project.integration.serv.mapper.Utils.convertList;
 import com.project.integration.dao.entity.Ticket;
 import com.project.integration.serv.dto.TicketDto;
 import com.project.integration.serv.enums.TicketSeverity;
+import com.project.integration.serv.exception.ServiceException;
 import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.Base64;
@@ -65,7 +66,7 @@ public class TicketMapper {
         byte[] photoAsBytes = photo.getBytes(1, (int) photo.length());
         base64String = Base64.getEncoder().encodeToString(photoAsBytes);
       } catch (SQLException e) {
-        throw new RuntimeException(e); // TODO
+        throw new ServiceException(e.getMessage());
       }
     }
     return base64String;

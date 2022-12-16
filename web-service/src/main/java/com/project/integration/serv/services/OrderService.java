@@ -6,6 +6,7 @@ import com.project.integration.dao.repos.OrderRepository;
 import com.project.integration.serv.dto.OrderDto;
 import com.project.integration.serv.enums.OrderStatus;
 import com.project.integration.serv.enums.UserStatus;
+import com.project.integration.serv.exception.ServiceException;
 import com.project.integration.serv.mapper.OrderMapper;
 import java.time.LocalDate;
 import java.util.List;
@@ -73,14 +74,20 @@ public class OrderService {
   public OrderDto findById(Integer id) {
     Optional<Order> order = orderRepository.findById(id);
     if (order.isPresent()) return orderMapper.convertToDto(order.get());
-    else throw new RuntimeException("order does not exist");
+    else throw new ServiceException("order does not exist");
   }
 
   public void setProjectToOrder(Integer projectId, Integer orderId) {
     orderRepository.setProject(projectId, orderId);
   }
 
-  public void blockOrder(Integer id){
+  public void blockOrder(Integer id) {
     orderRepository.blockOrder(id);
+  }
+
+  public OrderDto getClientCurrentProjectId(Integer clientId) {
+    List<Order> orders = orderRepository.getClientCurrentProjectId(clientId);
+    if (orders.size() > 0) return orderMapper.convertToDto(orders.get(0));
+    throw new ServiceException("Client has no active projects");
   }
 }

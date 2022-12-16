@@ -3,6 +3,7 @@ package com.project.integration.web.controller;
 import com.project.integration.serv.dto.UserDto;
 import com.project.integration.serv.services.UserService;
 import com.project.integration.web.security.models.ChangePswdRequest;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,15 +29,15 @@ public class UserController {
     this.authenticationManager = authenticationManager;
   }
 
-  // Is being used anywhere?
-//  @PostMapping
-//  public ResponseEntity<Void> create(@RequestBody UserDto userDto) {
-//    userService.create(userDto);
-//    return new ResponseEntity<>(HttpStatus.OK);
-//  }
+  @PutMapping(value = "/{id}")
+  public ResponseEntity<Void> update(
+      @RequestBody @Valid UserDto userDto, @PathVariable("id") Integer id) {
+    userService.update(userDto, id);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
 
   @GetMapping(value = "/{id}")
-  public ResponseEntity<UserDto> findUserById(@PathVariable("id") Integer id){
+  public ResponseEntity<UserDto> findUserById(@PathVariable("id") Integer id) {
     UserDto userDto = userService.findUserById(id);
     return new ResponseEntity<>(userDto, HttpStatus.OK);
   }

@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -43,6 +44,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
         UserDetails userDetails =
             new UserDetailsImpl(
+                jwtProvider.getIdFromToken(token),
                 jwtProvider.getLoginFromToken(token),
                 Strings.EMPTY,
                 jwtProvider.getRolesFromToken(token),
@@ -61,18 +63,16 @@ public class JwtFilter extends OncePerRequestFilter {
         if (jwtProvider.isRefreshAvailable(e)) {
           allowForRefreshToken(e, request);
         } else {
-          request.setAttribute(
-              Attributes.EXCEPTION, new JwtException("Token is not available for refresh yet"));
+          throw new JwtException("Token is not available for refresh yet");
         }
 
       } else {
-        request.setAttribute(Attributes.EXCEPTION, e);
+        throw e;
       }
 
     } catch (JwtException e) {
-      request.setAttribute(Attributes.EXCEPTION, e);
+      throw e;
     }
-
     filterChain.doFilter(request, response);
   }
 

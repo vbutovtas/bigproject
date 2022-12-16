@@ -3,6 +3,8 @@ package com.project.integration.serv.dto;
 import com.project.integration.dao.entity.Role;
 import com.project.integration.serv.enums.UserRoles;
 import com.project.integration.serv.enums.UserStatus;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import lombok.AccessLevel;
 import lombok.Data;
@@ -16,6 +18,7 @@ public class UserDto {
   Integer id;
   UserRoles role;
   String login;
+
   String password;
   @Size(min = 2, message = "Name is too short")
   @Size(max = 45, message = "Name is too long")
@@ -23,8 +26,10 @@ public class UserDto {
   @Size(min = 2, message = "Surname is too short")
   @Size(max = 45, message = "Surname is too long")
   String surname;
+  @NotBlank(message = "Email cannot be empty")
   String email;
   String phone;
+
   UserStatus status;
 
   public UserDto(Integer id, Role role, String login, String name, String surname, String email, String phone) {

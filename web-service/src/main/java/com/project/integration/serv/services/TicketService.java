@@ -38,7 +38,7 @@ public class TicketService {
     if (project.isPresent()) {
       List<Ticket> tickets = ticketRepository.findByTicketOrderByOrder(project.get());
       return ticketMapper.convertToDto(tickets);
-    } else throw new RuntimeException("project does not exist"); // TODO
+    } else throw new ServiceException("project does not exist");
   }
 
   public List<TicketDto> getProjects() {
@@ -48,7 +48,7 @@ public class TicketService {
   public TicketDto getTicket(Integer id) {
     Optional<Ticket> ticket = ticketRepository.findById(id);
     if (ticket.isPresent()) return ticketMapper.convertToDto(ticket.get());
-    else throw new RuntimeException("ticket does not exist"); // TODO
+    else throw new ServiceException("ticket does not exist");
   }
 
   public void updateTicket(TicketDto ticketDto, Integer id) {
@@ -94,7 +94,7 @@ public class TicketService {
           sourceTicket.get().getStatus(),
           destination,
           destinationColumn.getValue());
-    } else throw new RuntimeException("ticket does not exist"); // TODO
+    } else throw new ServiceException("ticket does not exist");
   }
 
   public void createProject(TicketDto projectDto, Integer orderId) {
@@ -102,7 +102,7 @@ public class TicketService {
     projectDto.setStatus(TicketStatus.OPEN);
     projectDto.setType(TicketType.PROJECT);
     projectDto.setSeverity(TicketSeverity.NORMAL);
-    projectDto.setOrder(Consts.PROJECT_ORDER);
+    projectDto.setEstimatedTime(0f);
     Ticket project = ticketMapper.convertToEntity(projectDto);
     Integer projectId = createOrUpdate(project);
     orderService.setProjectToOrder(projectId, orderId);
@@ -127,7 +127,7 @@ public class TicketService {
       ticketRepository.save(ticket);
       return ticket.getId();
     } catch (DataIntegrityViolationException e) {
-      throw new RuntimeException(e); // TODO
+      throw new ServiceException(e.getMessage());
     }
   }
 }

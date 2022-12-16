@@ -3,7 +3,6 @@ package com.project.integration.serv.services;
 import com.project.integration.dao.entity.Employee;
 import com.project.integration.dao.entity.User;
 import com.project.integration.dao.repos.EmployeeRepository;
-import com.project.integration.dao.repos.RoleRepository;
 import com.project.integration.dao.repos.UserRepository;
 import com.project.integration.serv.dto.EmployeeDto;
 import com.project.integration.serv.enums.UserStatus;
@@ -22,8 +21,6 @@ import org.springframework.stereotype.Service;
 @ComponentScan("com.project.integration.serv")
 public class EmployeeService {
   private final EmployeeRepository employeeRepository;
-  private final UserRepository userRepository;
-  private final RoleRepository roleRepository;
   private final UserService userService;
   private final EmployeeMapper employeeMapper;
   private final PasswordEncoder passwordEncoder;
@@ -32,15 +29,11 @@ public class EmployeeService {
   @Autowired
   public EmployeeService(
       EmployeeRepository employeeRepository,
-      UserRepository userRepository,
-      RoleRepository roleRepository,
       UserService userService,
       EmployeeMapper employeeMapper,
       PasswordEncoder passwordEncoder,
       MailSender mailSender) {
     this.employeeRepository = employeeRepository;
-    this.userRepository = userRepository;
-    this.roleRepository = roleRepository;
     this.userService = userService;
     this.employeeMapper = employeeMapper;
     this.passwordEncoder = passwordEncoder;
@@ -57,7 +50,14 @@ public class EmployeeService {
     Optional<Employee> employee = employeeRepository.findById(id);
     if (employee.isPresent()) {
       return employeeMapper.convertToDto(employee.get());
-    } else throw new RuntimeException("employee not found"); // TODO
+    } else throw new ServiceException("Employee not found");
+  }
+
+  public EmployeeDto findByUserId(Integer userId) {
+    Optional<Employee> employee = employeeRepository.findByUserId(userId);
+    if (employee.isPresent()) {
+      return employeeMapper.convertToDto(employee.get());
+    } else throw new ServiceException("Employee not found");
   }
 
   public void create(EmployeeDto employeeDto) {
@@ -67,7 +67,7 @@ public class EmployeeService {
         || Objects.isNull(employeeDto.getUser().getRole())
         || Objects.isNull(employeeDto.getPosition())
         || Objects.isNull(employeeDto.getStartDate()))
-      throw new IllegalArgumentException("All fields must be filled"); // TODO
+      throw new ServiceException("All fields must be filled");
     Employee employee = employeeMapper.convertToEntity(employeeDto);
     User user = userService.prepareUser(employeeDto.getUser(), employeeDto.getUser().getRole());
     String message =
@@ -97,9 +97,9 @@ public class EmployeeService {
   // TODO refactor
   private void prepareEmployeeForUpdate(Employee employee) {
     Optional<Employee> initialEmployee = employeeRepository.findById(employee.getId());
-    if (initialEmployee.isEmpty()) throw new RuntimeException("Employee not found"); // TODO
+    if (initialEmployee.isEmpty()) throw new ServiceException("Employee not found");
     if (Objects.isNull(employee.getUser())) employee.setUser(initialEmployee.get().getUser());
-    else prepareUserForUpdate(employee.getUser(), initialEmployee.get().getUser().getLogin());
+    else userService.prepareUserForUpdate(employee.getUser(), initialEmployee.get().getUser().getId());
     if (Objects.isNull(employee.getBirthDate()))
       employee.setBirthDate(initialEmployee.get().getBirthDate());
     if (Objects.isNull(employee.getPosition()))
@@ -121,21 +121,11 @@ public class EmployeeService {
       employee.setProjects(initialEmployee.get().getProjects());
   }
 
-  private void prepareUserForUpdate(User user, String login) {
-    Optional<User> initUser = userRepository.findByLogin(login);
-    if (initUser.isEmpty()) throw new RuntimeException("User not found"); // TODO
-    if (Objects.isNull(user.getId())) user.setId(initUser.get().getId());
-    if (Objects.isNull(user.getRole())) user.setRole(initUser.get().getRole());
-    if (Objects.isNull(user.getPassword())) user.setPassword(initUser.get().getPassword());
-    if (Objects.isNull(user.getStatus())) user.setStatus(initUser.get().getStatus());
-    if (Objects.isNull(user.getOrders())) user.setOrders(initUser.get().getOrders());
-  }
-
   private void createOrUpdate(Employee employee) {
     try {
       employeeRepository.save(employee);
     } catch (DataIntegrityViolationException e) {
-      throw new RuntimeException("Login already exists"); // TODO
+      throw new ServiceException("Login already exists");
     }
   }
 }

@@ -7,6 +7,7 @@ import com.project.integration.web.consts.Attributes;
 import com.project.integration.web.consts.PropertiesKeys;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -58,6 +59,7 @@ public class JwtProvider {
       }
     }
 
+    claims.put(Attributes.ID, ((UserDetailsImpl)userDetails).getId());
     claims.put(Attributes.STATUS, ((UserDetailsImpl)userDetails).getStatus());
 
     return doGenerateToken(claims, userDetails.getUsername(), jwtExpirationInMs);
@@ -85,7 +87,8 @@ public class JwtProvider {
              | MalformedJwtException
              | UnsupportedJwtException
              | IllegalArgumentException ex) {
-      throw new BadCredentialsException("Invalid credentials", ex);
+      //throw new JwtException("Invalid credentials", ex);
+      return false;
     }
   }
 
@@ -102,7 +105,12 @@ public class JwtProvider {
 
   public UserStatus getStatusFromToken(String token){
     Claims claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
-    return claims.get(Attributes.STATUS, UserStatus.class);
+    return UserStatus.valueOf(claims.get(Attributes.STATUS, String.class));
+  }
+
+  public Integer getIdFromToken(String token){
+    Claims claims = Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody();
+    return claims.get(Attributes.ID, Integer.class);
   }
 
   public Boolean isRefreshAvailable(ExpiredJwtException e) {

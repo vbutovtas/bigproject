@@ -38,7 +38,7 @@ public class LandingController {
             Map<String, String> errorMap = ControllerUtils.getErrors(bindingResult);
             model.mergeAttributes(errorMap);
             model.addAttribute(ControllerConstants.ModelAttributes.IS_SHOWED, true);
-            model.addAttribute(ControllerConstants.ModelAttributes.FORM_CORRECTOR, 560 + errorMap.size() * 14);
+            model.addAttribute(ControllerConstants.ModelAttributes.FORM_CORRECTOR, 580 + errorMap.size() * 14);
         } else {
             model.addAttribute(ControllerConstants.ModelAttributes.IS_SUCCESS, true);
             orderService.create(PojoConverter.convertOrderPojoToDto(orderForm));
