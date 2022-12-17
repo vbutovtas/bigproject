@@ -11,6 +11,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -38,6 +39,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     this.unauthorizedHandler = unauthorizedHandler;
   }
 
+
+
   @Bean
   public AuthenticationManager authenticationManagerBean() throws Exception {
     return super.authenticationManagerBean();
@@ -53,12 +56,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
   }
 
+//  @Override
+//  public void configure(WebSecurity web) throws Exception {
+//    web.ignoring().antMatchers("/css/**", "/js/**");
+//  }
+
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http.cors().and().httpBasic().disable().csrf().disable();
 
     http.authorizeRequests()
-        .antMatchers("/", "/create_request", "/auth")
+        .antMatchers("/", "/create_request", "/auth", "/css/**", "/js/landing.js", "/static/**")
         .permitAll()
 
         .antMatchers("/employee/new","/orders/{\\d+}/block", "/user/{\\d+}/block", "/user/{\\d+}/deactivate")

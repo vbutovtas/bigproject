@@ -87,7 +87,6 @@ public class JwtProvider {
              | MalformedJwtException
              | UnsupportedJwtException
              | IllegalArgumentException ex) {
-      //throw new JwtException("Invalid credentials", ex);
       return false;
     }
   }

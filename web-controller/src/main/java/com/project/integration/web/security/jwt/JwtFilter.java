@@ -30,6 +30,16 @@ public class JwtFilter extends OncePerRequestFilter {
   }
 
   @Override
+  protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+    return request.getRequestURI().equals("/")
+        || request.getRequestURI().equals("/create_request")
+        || request.getRequestURI().equals("/auth")
+        || request.getRequestURI().equals("/css/**")
+        || request.getRequestURI().equals("/js/**")
+        || request.getRequestURI().equals("/static/**");
+  }
+
+  @Override
   protected void doFilterInternal(
       HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
       throws ServletException, IOException {
@@ -55,6 +65,9 @@ public class JwtFilter extends OncePerRequestFilter {
                 userDetails, null, userDetails.getAuthorities());
 
         SecurityContextHolder.getContext().setAuthentication(auth);
+
+        filterChain.doFilter(request, response);
+        return;
       }
     } catch (ExpiredJwtException e) {
 
@@ -66,14 +79,10 @@ public class JwtFilter extends OncePerRequestFilter {
           throw new JwtException("Token is not available for refresh yet");
         }
 
-      } else {
-        throw e;
       }
-
-    } catch (JwtException e) {
-      throw e;
     }
-    filterChain.doFilter(request, response);
+
+    response.setStatus(HttpStatus.UNAUTHORIZED.value());
   }
 
   private void allowForRefreshToken(ExpiredJwtException ex, HttpServletRequest request) {
