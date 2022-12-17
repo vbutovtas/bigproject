@@ -56,17 +56,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
   }
 
-//  @Override
-//  public void configure(WebSecurity web) throws Exception {
-//    web.ignoring().antMatchers("/css/**", "/js/**");
-//  }
-
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http.cors().and().httpBasic().disable().csrf().disable();
 
     http.authorizeRequests()
-        .antMatchers("/", "/create_request", "/auth", "/css/**", "/js/landing.js", "/static/**")
+        .antMatchers("/", "/create_request", "/auth", "/css/**", "/js/**")
         .permitAll()
 
         .antMatchers("/employee/new","/orders/{\\d+}/block", "/user/{\\d+}/block", "/user/{\\d+}/deactivate")

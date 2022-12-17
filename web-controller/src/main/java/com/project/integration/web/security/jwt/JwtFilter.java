@@ -34,9 +34,8 @@ public class JwtFilter extends OncePerRequestFilter {
     return request.getRequestURI().equals("/")
         || request.getRequestURI().equals("/create_request")
         || request.getRequestURI().equals("/auth")
-        || request.getRequestURI().equals("/css/**")
-        || request.getRequestURI().equals("/js/**")
-        || request.getRequestURI().equals("/static/**");
+        || request.getRequestURI().equals("/css/landing.css")
+        || request.getRequestURI().equals("/js/landing.js");
   }
 
   @Override
