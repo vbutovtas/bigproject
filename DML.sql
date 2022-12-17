@@ -1,31 +1,22 @@
-select * from roles;
-
-select * from users;
-
-select * from employees;
-
-select * from tickets order by tickets.status, tickets.order_number;
-
-select * from projects_has_employees;
-
 
 insert into roles values(default, 'ROLE_ADMIN');
 insert into roles values(default, 'ROLE_MANAGER');
 insert into roles values(default, 'ROLE_EMPLOYEE');
 insert into roles values(default, 'ROLE_CUSTOMER');
 
-insert into users values (default, 3, 'user1', '$2a$10$r22vvkcw0qIeChQSlKRObOCjZjTuEVb20DXE8oAgc7dUE7WePEiaC', 'name1', 'surname1', 'email1', 'phone1', 'ACTIVE');
-insert into users values (default, 3, 'user2', '$2a$10$r22vvkcw0qIeChQSlKRObOCjZjTuEVb20DXE8oAgc7dUE7WePEiaC', 'name2', 'surname2', 'email2', 'phone2', 'ACTIVE');
-insert into users values (default, 2, 'manager1', '$2a$10$r22vvkcw0qIeChQSlKRObOCjZjTuEVb20DXE8oAgc7dUE7WePEiaC', 'name3', 'surname3', 'email3', 'phone3', 'ACTIVE');
-insert into users values (default, 3, 'qwert', '$2a$10$r22vvkcw0qIeChQSlKRObOCjZjTuEVb20DXE8oAgc7dUE7WePEiaC', 'Vitaliy', 'Butovtas', 'qwerrt@mail.ru', '+643234', 'ACTIVE');
-insert into users values (default, 3, 'liza', '$2a$10$r22vvkcw0qIeChQSlKRObOCjZjTuEVb20DXE8oAgc7dUE7WePEiaC', 'Liza', 'Ivanova', 'liza@gmail.com', '+34563231', 'ACTIVE');
+insert into users values (default, 1, 'user1', '$2a$10$r22vvkcw0qIeChQSlKRObOCjZjTuEVb20DXE8oAgc7dUE7WePEiaC', 'Liza', 'Yakovleva', 'marusika6464@mail.ru', '+12345', 'ACTIVE');
+insert into users values (default, 2, 'user2', '$2a$10$r22vvkcw0qIeChQSlKRObOCjZjTuEVb20DXE8oAgc7dUE7WePEiaC', 'Alexandra', 'Lappo', 'marusika6464@mail.ru', '+12345', 'ACTIVE');
+insert into users values (default, 3, 'user3', '$2a$10$r22vvkcw0qIeChQSlKRObOCjZjTuEVb20DXE8oAgc7dUE7WePEiaC', 'Lera', 'Tripuz', 'marusika6464@mail.ru', '+12345', 'ACTIVE');
+insert into users values (default, 4, 'user4', '$2a$10$r22vvkcw0qIeChQSlKRObOCjZjTuEVb20DXE8oAgc7dUE7WePEiaC', 'Vitaliy', 'Butovtas', 'marusika6464@mail.ru', '+12345', 'ACTIVE');
+insert into users values (default, 5, 'user5', '$2a$10$r22vvkcw0qIeChQSlKRObOCjZjTuEVb20DXE8oAgc7dUE7WePEiaC', 'Ivan', 'Ivanov', 'marusika6464@mail.ru', '+12345', 'ACTIVE');
 
-insert into employees values (default, 1, '1998-05-16', 'Middle Java developer', 'Java, Spring, Hibernate', '2018-11-29', '1.2', null);
-insert into employees values (default, 2, '1980-10-01', 'Senior Java developer', 'Java, Spring, Hibernate, Docker', '2015-01-17', '3.5', null);
-insert into employees values (default, 3, '1980-10-01', 'Senior Java developer', 'Java, Spring, Hibernate, Docker', '2015-01-17', '3.5', null);
-insert into employees values (default, 4, '1997-12-21', 'Middle Java developer | Dev Lead', 'Java, Spring, Hibernate, Jenkins', '2015-01-17', '2.3', null);
-insert into employees values (default, 5, '2002-07-23', 'Junior Java developer', 'Java, Spring, Hibernate', '2015-01-17', '0.5', null);
+insert into employees values (default, 1, '2002-07-23', 'Middle Java developer', 'Java, Spring, Hibernate', '2023-01-03', '1.3', null);
+insert into employees values (default, 2, '1980-10-01', 'QA', 'Selenium, JUnit', '2022-12-17', '1.0', null);
+insert into employees values (default, 3, '1980-10-01', 'Javacript Dev', 'HTML, CSS, JS, React Native', '2022-12-17', '1.0', null);
+insert into employees values (default, 4, '1997-12-21', 'Middle Java developer | Dev Lead', 'Java, Spring, Hibernate, Jenkins', '2022-12-17', '2.6', null);
+insert into employees values (default, 5, '2002-07-23', 'C# developer', 'WPF, ASP.Net, APS.Core', '2022-12-17', '0.5', null);
 
+/* 
 insert into tickets values (default, 1, 1, null, 'project1', 'description1', NOW(),  '2024-01-01', 0, 0, 'OPEN', 'PROJECT', 
 2, 'https://github.com/vbutovtas/bigproject', 1);
 insert into tickets values (default, 2, 2, 1, 'ticket1', 'ticket1description1', NOW(), '2024-01-01', 0, 0, 'OPEN', 'TASK', 
@@ -42,6 +33,7 @@ insert into tickets values (default, 2, 2, 1, 'ticket6', 'ticket1description3', 
 2, 'https://github.com/vbutovtas/bigproject', 6);
 
 insert into projects_has_employees values (1, 1);
+*/
 
 
 DROP PROCEDURE IF EXISTS reorderTickets;
@@ -85,6 +77,5 @@ BEGIN
 END$$
 delimiter ;
 
-
-CALL reorderTickets(5, 1, 'IN_BUILD', 1, 'OPEN');
+/* CALL reorderTickets(5, 1, 'IN_BUILD', 1, 'OPEN'); */
 
