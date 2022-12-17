@@ -32,7 +32,8 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
   @Query(
       nativeQuery = true,
       value =
-          "select orders.* from orders inner join tickets where orders.client_id = ?1 and tickets.status='OPEN' and tickets.type='PROJECT'")
+          "select orders.* from orders inner join tickets on orders.project_id=tickets.id "
+              + "where orders.client_id = ?1 and tickets.status='OPEN' and tickets.type='PROJECT'")
   List<Order> getClientCurrentProjectId(Integer clientId);
 
   List<Order> findByStatusNot(String status);
