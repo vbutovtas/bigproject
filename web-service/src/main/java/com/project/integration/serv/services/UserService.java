@@ -6,6 +6,7 @@ import com.project.integration.dao.entity.User;
 import com.project.integration.dao.repos.UserRepository;
 import com.project.integration.serv.dto.UserDto;
 import com.project.integration.serv.enums.OrderStatus;
+import com.project.integration.serv.enums.TicketStatus;
 import com.project.integration.serv.enums.UserRoles;
 import com.project.integration.serv.enums.UserStatus;
 import com.project.integration.serv.exception.ServiceException;
@@ -81,12 +82,14 @@ public class UserService implements UserDetailsService {
   public User autoCreate(UserDto userDto, Order order) {
     User user = prepareUser(userDto, UserRoles.ROLE_CUSTOMER), userWithOpenedPSWRD;
     String password = user.getPassword();
-    try {
-      user.setPassword(passwordEncoder.encode(user.getPassword()));
-      userRepository.save(user);
-      user.setOrders(Collections.singleton(order));
-    } catch (Exception e) {
-      throw new ServiceException("Failed to create user: " + user, e);
+    if (Objects.isNull(user.getId())) {
+      try {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        userRepository.save(user);
+        user.setOrders(Collections.singleton(order));
+      } catch (Exception e) {
+        throw new ServiceException("Failed to create user: " + user, e);
+      }
     }
     userWithOpenedPSWRD = new User(user);
     userWithOpenedPSWRD.setPassword(password);
@@ -151,6 +154,23 @@ public class UserService implements UserDetailsService {
     } else throw new ServiceException("User not found");
   }
 
+  public void activateUser(Integer id) {
+    Optional<User> user = userRepository.findById(id);
+    if (user.isPresent()) {
+      if (user.get().getRole().getId().equals(UserRoles.ROLE_CUSTOMER.getValue())) {
+        for (Order order : user.get().getOrders()) {
+          if (Objects.nonNull(order.getProject())) {
+            if (order.getProject().getStatus().equals(TicketStatus.CLOSE.getValue()))
+              order.setStatus(OrderStatus.DONE.getValue());
+            else order.setStatus(OrderStatus.IS_PROCESSED.getValue());
+          } else order.setStatus(OrderStatus.OPEN.getValue());
+        }
+      }
+      user.get().setStatus(UserStatus.ACTIVE.getValue());
+      userRepository.save(user.get());
+    } else throw new ServiceException("User not found");
+  }
+
   public void deactivateUser(Integer id) {
     Optional<User> user = userRepository.findById(id);
     if (user.isPresent()) {
@@ -163,6 +183,15 @@ public class UserService implements UserDetailsService {
               (user.get().getName() + " " + user.get().getSurname()), newPassword);
       user.get().setPassword(passwordEncoder.encode(newPassword));
       user.get().setStatus(UserStatus.DEACTIVATED.getValue());
+      if (user.get().getRole().getId().equals(UserRoles.ROLE_CUSTOMER.getValue())) {
+        for (Order order : user.get().getOrders()) {
+          if (Objects.nonNull(order.getProject())) {
+            if (order.getProject().getStatus().equals(TicketStatus.CLOSE.getValue()))
+              order.setStatus(OrderStatus.DONE.getValue());
+            else order.setStatus(OrderStatus.IS_PROCESSED.getValue());
+          } else order.setStatus(OrderStatus.OPEN.getValue());
+        }
+      }
       userRepository.save(user.get());
       mailSender.send(user.get().getEmail(), "IT Manager Projects", message);
     }

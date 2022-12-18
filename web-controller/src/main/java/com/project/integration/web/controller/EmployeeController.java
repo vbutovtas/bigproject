@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -45,8 +46,9 @@ public class EmployeeController {
   }
 
   @GetMapping(value = "/all")
-  public ResponseEntity<List<EmployeeDto>> findAll() {
-    List<EmployeeDto> employeeDtos = employeeService.findAll();
+  public ResponseEntity<List<EmployeeDto>> findAll(
+      @RequestParam(name = "showBlocked", required = false) boolean showBlocked) {
+    List<EmployeeDto> employeeDtos = employeeService.findAll(showBlocked);
     return new ResponseEntity<>(employeeDtos, HttpStatus.OK);
   }
 

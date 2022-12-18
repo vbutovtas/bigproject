@@ -48,6 +48,12 @@ public class UserController {
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
+  @PutMapping(value = "/{id}/activate")
+  public ResponseEntity<Void> activateUser(@PathVariable("id") Integer id) {
+    userService.activateUser(id);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+
   @PutMapping(value = "/{id}/deactivate")
   public ResponseEntity<Void> deactivateUser(@PathVariable("id") Integer id) {
     userService.deactivateUser(id);

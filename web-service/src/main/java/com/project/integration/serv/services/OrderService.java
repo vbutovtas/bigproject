@@ -55,17 +55,10 @@ public class OrderService {
     }
   }
 
-  public List<OrderDto> findAll() {
-    List<Order> orders = orderRepository.findByStatusNot(OrderStatus.BLOCKED.getValue());
-    List<OrderDto> orderDtos = orderMapper.convertToDto(orders);
-    orderDtos.forEach(order -> order.setDescription(null));
-    return orderDtos;
-  }
-
-  public List<OrderDto> findByClientId(Integer id) {
-    User client = new User();
-    client.setId(id);
-    List<Order> orders = orderRepository.findByClient(client);
+  public List<OrderDto> findAll(boolean showBlocked) {
+    List<Order> orders;
+    if (showBlocked) orders = orderRepository.findAll();
+    else orders = orderRepository.findByStatusNot(OrderStatus.BLOCKED.getValue());
     List<OrderDto> orderDtos = orderMapper.convertToDto(orders);
     orderDtos.forEach(order -> order.setDescription(null));
     return orderDtos;

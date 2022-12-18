@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Repository
 @ComponentScan("com.project.integration")
 public interface OrderRepository extends JpaRepository<Order, Integer> {
-  List<Order> findByClient(User client);
 
   @Transactional
   @Modifying

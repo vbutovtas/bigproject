@@ -3,7 +3,6 @@ package com.project.integration.serv.services;
 import com.project.integration.dao.entity.Employee;
 import com.project.integration.dao.entity.User;
 import com.project.integration.dao.repos.EmployeeRepository;
-import com.project.integration.dao.repos.UserRepository;
 import com.project.integration.serv.dto.EmployeeDto;
 import com.project.integration.serv.enums.UserStatus;
 import com.project.integration.serv.exception.ServiceException;
@@ -40,9 +39,10 @@ public class EmployeeService {
     this.mailSender = mailSender;
   }
 
-  public List<EmployeeDto> findAll() {
-    List<Employee> employees =
-        employeeRepository.findByUserStatusNot(UserStatus.BLOCKED.getValue());
+  public List<EmployeeDto> findAll(boolean showBlocked) {
+    List<Employee> employees;
+    if (showBlocked) employees = employeeRepository.findAll();
+    else employees = employeeRepository.findByUserStatusNot(UserStatus.BLOCKED.getValue());
     return employeeMapper.convertToDto(employees);
   }
 
@@ -99,7 +99,8 @@ public class EmployeeService {
     Optional<Employee> initialEmployee = employeeRepository.findById(employee.getId());
     if (initialEmployee.isEmpty()) throw new ServiceException("Employee not found");
     if (Objects.isNull(employee.getUser())) employee.setUser(initialEmployee.get().getUser());
-    else userService.prepareUserForUpdate(employee.getUser(), initialEmployee.get().getUser().getId());
+    else
+      userService.prepareUserForUpdate(employee.getUser(), initialEmployee.get().getUser().getId());
     if (Objects.isNull(employee.getBirthDate()))
       employee.setBirthDate(initialEmployee.get().getBirthDate());
     if (Objects.isNull(employee.getPosition()))
