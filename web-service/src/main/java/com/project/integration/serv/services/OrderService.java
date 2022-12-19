@@ -81,6 +81,6 @@ public class OrderService {
   public OrderDto getClientCurrentProjectId(Integer clientId) {
     List<Order> orders = orderRepository.getClientCurrentProjectId(clientId);
     if (orders.size() > 0) return orderMapper.convertToDto(orders.get(0));
-    throw new ServiceException("Client has no active projects");
+    else throw new ServiceException("Client has no active projects");
   }
 }
